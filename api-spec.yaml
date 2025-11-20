@@ -1,0 +1,236 @@
+openapi: 3.1.0
+info:
+  title: API de Chat
+  description: |
+    API robusta para interacciones de chat con funciones avanzadas:
+    - Procesamiento de mensajes con contexto
+    - Recuperación de historial de conversaciones
+    - Comprobaciones de estado del sistema
+  version: 1.2.1
+  contact:
+    name: Soporte de la API
+    email: soporte@tudominio.com
+    url: https://api.tudominio.com/soporte
+  license:
+    name: Propietario
+    url: https://tudominio.com/terminos
+
+servers:
+  - url: https://api.tudominio.com/v1
+    description: Servidor de producción
+  - url: https://staging-api.tudominio.com/v1
+    description: Servidor de pruebas
+  - url: http://localhost:3000/v1
+    description: Servidor local de desarrollo
+
+tags:
+  - name: Chat
+    description: Operaciones de chat en tiempo real
+  - name: Historial
+    description: Gestión del historial de conversaciones
+  - name: Estado
+    description: Comprobaciones de estado de la API
+
+paths:
+  /chat/mensaje:
+    post:
+      tags: [Chat]
+      summary: Procesar mensaje del usuario
+      description: |
+        Procesa un mensaje de chat entrante con contexto opcional.
+        Limitado a 10 solicitudes por minuto por usuario/IP.
+      operationId: procesarMensaje
+      security:
+        - ApiKeyAuth: []
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MensajeChat'
+            examples:
+              basico:
+                value:
+                  usuarioId: "user123"
+                  mensajeUsuario: "Hola"
+              conContexto:
+                value:
+                  usuarioId: "user123"
+                  mensajeUsuario: "¿Cuál fue mi último pedido?"
+                  contexto:
+                    ultimoPedido: "ORD-45678"
+                    nivelUsuario: "premium"
+      responses:
+        '200':
+          description: Mensaje procesado con éxito
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RespuestaChat'
+        '400':
+          description: Entrada inválida
+        '429':
+          description: Demasiadas solicitudes - Límite de tasa excedido
+          headers:
+            Retry-After:
+              description: Segundos hasta que se pueda hacer una nueva solicitud
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorLimite'
+        '500':
+          description: Error interno del servidor
+
+  /chat/historial:
+    get:
+      tags: [Historial]
+      summary: Obtener historial de conversación
+      description: Recupera el historial paginado de conversaciones de un usuario.
+      operationId: obtenerHistorialChat
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/usuarioId'
+        - $ref: '#/components/parameters/limite'
+        - $ref: '#/components/parameters/desplazamiento'
+      responses:
+        '200':
+          description: Historial recuperado con éxito
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RespuestaHistorial'
+        '401':
+          description: No autorizado
+        '404':
+          description: Usuario no encontrado
+
+  /estado:
+    get:
+      tags: [Estado]
+      summary: Comprobación del estado de la API
+      description: Devuelve información sobre el estado de la API.
+      operationId: comprobarEstado
+      responses:
+        '200':
+          description: API en buen estado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  estado:
+                    type: string
+                    example: "saludable"
+                  version:
+                    type: string
+                    example: "1.2.1"
+                  timestamp:
+                    type: string
+                    format: date-time
+
+components:
+  schemas:
+    MensajeChat:
+      type: object
+      required:
+        - usuarioId
+        - mensajeUsuario
+      properties:
+        usuarioId:
+          type: string
+          description: Identificador único del usuario.
+          minLength: 5
+          maxLength: 36
+          pattern: "^[a-zA-Z0-9_-]+$"
+          example: "user123"
+        mensajeUsuario:
+          type: string
+          description: Contenido del mensaje del usuario.
+          minLength: 1
+          maxLength: 1000
+          example: "¿Cómo puedo ayudarte hoy?"
+        contexto:
+          type: object
+          description: Contexto adicional de la conversación.
+          additionalProperties: true
+          example:
+            ubicacion: "Madrid"
+            preferencias:
+              idioma: "es"
+
+    RespuestaChat:
+      type: object
+      properties:
+        estado:
+          type: string
+          enum: [exito, error]
+        codigo:
+          type: integer
+          format: int32
+        datos:
+          type: object
+          properties:
+            respuesta:
+              type: string
+              description: Respuesta generada.
+        timestamp:
+          type: string
+          format: date-time
+        metadatos:
+          type: object
+          properties:
+            version:
+              type: string
+            requestId:
+              type: string
+
+    ErrorLimite:
+      allOf:
+        - $ref: '#/components/schemas/ErrorRespuesta'
+        - type: object
+          properties:
+            reintentarEn:
+              type: integer
+              description: Segundos hasta que el usuario pueda hacer una nueva solicitud.
+
+  parameters:
+    usuarioId:
+      name: usuarioId
+      in: query
+      description: Identificador del usuario.
+      required: true
+      schema:
+        type: string
+    limite:
+      name: limite
+      in: query
+      description: Número de elementos a devolver.
+      required: false
+      schema:
+        type: integer
+        default: 20
+        minimum: 1
+        maximum: 100
+    desplazamiento:
+      name: desplazamiento
+      in: query
+      description: Offset de paginación.
+      required: false
+      schema:
+        type: integer
+        default: 0
+        minimum: 0
+
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-KEY
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
