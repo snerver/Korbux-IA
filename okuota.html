@@ -1,0 +1,965 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Okuota - KORBUX IA</title>
+    <meta name="description" content="Módulo Okuota: Gestión de cuotas y análisis de datos" />
+
+    <!-- Favicon -->
+    <link rel="icon" href="assets/img/logo.png" type="image/png" />
+
+    <!-- Estilos -->
+    <style>
+        /* Reset básico */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Tipografía y fondo general */
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+            line-height: 1.6;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Contenedor principal */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        /* Navbar lateral izquierdo */
+        .navbar {
+            background: linear-gradient(180deg, #4f46e5 0%, #6366f1 100%);
+            color: #fff;
+            padding: 1.5rem 1rem;
+            width: 280px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+            .navbar .brand {
+                font-size: 1.5rem;
+                font-weight: bold;
+                color: #fff;
+                text-decoration: none;
+                transition: color 0.3s ease;
+                padding: 0.75rem;
+                text-align: center;
+                background: rgba(255,255,255,0.1);
+                border-radius: 8px;
+                margin-bottom: 2rem;
+            }
+
+                .navbar .brand:hover {
+                    color: #c7d2fe;
+                    background: rgba(255,255,255,0.15);
+                }
+
+        .nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+            .nav-links a {
+                color: #e2e8f0;
+                text-decoration: none;
+                padding: 0.75rem 1rem;
+                border-radius: 6px;
+                transition: all 0.3s ease;
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+            }
+
+                .nav-links a:hover {
+                    color: #fff;
+                    background: rgba(255,255,255,0.1);
+                    transform: translateX(5px);
+                }
+
+                .nav-links a.active {
+                    background: rgba(255,255,255,0.2);
+                    color: #fff;
+                    font-weight: 600;
+                }
+
+        .nav-icon {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Controles de navegación */
+        .nav-controls {
+            margin-top: auto;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .control-group {
+            margin-bottom: 1rem;
+        }
+
+        .control-label {
+            display: block;
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+            color: #c7d2fe;
+        }
+
+        #lang-select {
+            width: 100%;
+            padding: 0.5rem;
+            border-radius: 6px;
+            border: 1px solid rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+        }
+
+            #lang-select option {
+                background: #4f46e5;
+                color: #fff;
+            }
+
+        #toggle-theme {
+            width: 100%;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            color: #fff;
+            transition: all 0.3s ease;
+            padding: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+            #toggle-theme:hover {
+                background: rgba(255,255,255,0.2);
+            }
+
+        /* Contenido principal */
+        .main-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Header superior */
+        .content-header {
+            background: #fff;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid #e2e8f0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #4f46e5;
+        }
+
+        /* Contenido de Okuota */
+        .okuota-content {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        /* Dashboard de Okuota */
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .dashboard-card {
+            background: #fff;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .card-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #4f46e5;
+            margin: 0.5rem 0;
+        }
+
+        .card-change {
+            font-size: 0.875rem;
+            color: #10b981;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+            .card-change.negative {
+                color: #ef4444;
+            }
+
+        /* Gráficos */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-container {
+            background: #fff;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .chart-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .chart-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chart-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid #e2e8f0;
+            background: #fff;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+            .chart-btn:hover {
+                background: #f8fafc;
+            }
+
+        .chart-placeholder {
+            height: 300px;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748b;
+            font-size: 1.1rem;
+        }
+
+        /* Tablas */
+        .tables-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .table-container {
+            background: #fff;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .table-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .table-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .table-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid #e2e8f0;
+            background: #fff;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+            .table-btn.primary {
+                background: #4f46e5;
+                color: #fff;
+                border-color: #4f46e5;
+            }
+
+                .table-btn.primary:hover {
+                    background: #4338ca;
+                }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        th {
+            font-weight: 600;
+            color: #374151;
+            background: #f8fafc;
+        }
+
+        tr:hover {
+            background: #f8fafc;
+        }
+
+        .status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+            .status.paid {
+                background: #dcfce7;
+                color: #166534;
+            }
+
+            .status.pending {
+                background: #fef3c7;
+                color: #92400e;
+            }
+
+            .status.overdue {
+                background: #fee2e2;
+                color: #991b1b;
+            }
+
+        /* Tema oscuro */
+        .dark-theme {
+            background-color: #0f172a;
+            color: #f1f5f9;
+        }
+
+            .dark-theme .navbar {
+                background: linear-gradient(180deg, #3730a3 0%, #4f46e5 100%);
+            }
+
+            .dark-theme .content-header {
+                background: #1e293b;
+                border-color: #334155;
+            }
+
+            .dark-theme .page-title {
+                color: #f1f5f9;
+            }
+
+            .dark-theme .dashboard-card,
+            .dark-theme .chart-container,
+            .dark-theme .table-container {
+                background: #1e293b;
+                border-color: #334155;
+            }
+
+            .dark-theme .card-title,
+            .dark-theme .chart-title,
+            .dark-theme .table-title {
+                color: #e2e8f0;
+            }
+
+            .dark-theme .card-value {
+                color: #818cf8;
+            }
+
+            .dark-theme th {
+                background: #334155;
+                color: #e2e8f0;
+            }
+
+            .dark-theme tr:hover {
+                background: #334155;
+            }
+
+            .dark-theme .chart-btn,
+            .dark-theme .table-btn {
+                background: #334155;
+                border-color: #475569;
+                color: #e2e8f0;
+            }
+
+                .dark-theme .chart-btn:hover,
+                .dark-theme .table-btn:hover {
+                    background: #475569;
+                }
+
+            .dark-theme .chart-placeholder {
+                background: linear-gradient(135deg, #334155 0%, #475569 100%);
+                color: #94a3b8;
+            }
+
+            .dark-theme #lang-select {
+                background: rgba(255,255,255,0.1);
+                border-color: rgba(255,255,255,0.3);
+                color: #fff;
+            }
+
+        /* Estados responsive */
+        .nav-hidden {
+            transform: translateX(-100%);
+        }
+
+        /* Responsividad */
+        @media (max-width: 1024px) {
+            .navbar {
+                width: 250px;
+            }
+
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tables-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+
+            .navbar {
+                position: fixed;
+                left: 0;
+                top: 0;
+                height: 100vh;
+                z-index: 1000;
+                transform: translateX(-100%);
+            }
+
+                .navbar.nav-visible {
+                    transform: translateX(0);
+                }
+
+                .navbar .brand {
+                    margin-bottom: 1rem;
+                }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .okuota-content {
+                padding: 1rem;
+            }
+
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                display: flex;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .content-header {
+                padding: 1rem;
+            }
+
+            .page-title {
+                font-size: 1.25rem;
+            }
+
+            .okuota-content {
+                padding: 0.5rem;
+            }
+
+            .dashboard-card,
+            .chart-container,
+            .table-container {
+                padding: 1rem;
+            }
+
+            .card-value {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar lateral izquierdo -->
+    <nav class="navbar" role="navigation" aria-label="Navegación principal">
+        <!-- Logo / Marca -->
+        <a href="index.html" class="brand" aria-label="Inicio - KORBUX IA">
+            <strong>KORBUX IA</strong>
+        </a>
+
+        <!-- Enlaces de módulos -->
+        <div class="nav-links" aria-label="Módulos disponibles">
+            <a href="okuota.html" class="active">
+                <span class="nav-icon">📊</span>
+                Okuota
+            </a>
+            <a href="monet.html">
+                <span class="nav-icon">🎨</span>
+                Monet
+            </a>
+            <a href="ditters.html">
+                <span class="nav-icon">🔬</span>
+                Ditters
+            </a>
+            <a href="jean.html">
+                <span class="nav-icon">💼</span>
+                Jean
+            </a>
+            <a href="lovelace.html">
+                <span class="nav-icon">👩‍💻</span>
+                Lovelace
+            </a>
+            <a href="santaolalla.html">
+                <span class="nav-icon">📚</span>
+                Santa Olalla
+            </a>
+            <a href="perfil.html" aria-label="Perfil de usuario">
+                <span class="nav-icon">👤</span>
+                Perfil
+            </a>
+            <a href="historial.html" aria-label="Historial de conversaciones">
+                <span class="nav-icon">📋</span>
+                Historial
+            </a>
+        </div>
+
+        <!-- Controles -->
+        <div class="nav-controls">
+            <!-- Selector de idioma -->
+            <div class="control-group">
+                <label for="lang-select" class="control-label">Idioma</label>
+                <select id="lang-select" aria-label="Seleccionar idioma de la interfaz">
+                    <option value="es" selected>Español</option>
+                    <option value="en">English</option>
+                    <option value="fr">Français</option>
+                    <option value="de">Deutsch</option>
+                    <option value="it">Italiano</option>
+                    <option value="pt">Português</option>
+                    <option value="ru">Русский</option>
+                    <option value="ja">日本語</option>
+                    <option value="zh">中文</option>
+                    <option value="ar">العربية</option>
+                    <option value="eu">Euskara</option>
+                    <option value="ca">Català</option>
+                    <option value="gl">Galego</option>
+                    <option value="hi">हिन्दी</option>
+                </select>
+            </div>
+
+            <!-- Botón tema -->
+            <div class="control-group">
+                <button id="toggle-theme"
+                        type="button"
+                        title="Alternar tema claro/oscuro"
+                        aria-label="Cambiar entre tema claro y oscuro">
+                    <span>🌙</span>
+                    <span>Modo Oscuro</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Contenido principal -->
+    <div class="main-container">
+        <!-- Header superior -->
+        <header class="content-header">
+            <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Abrir menú">
+                ☰
+            </button>
+            <h1 class="page-title">Módulo Okuota - Gestión de Cuotas</h1>
+            <div style="width: 40px;"></div> <!-- Espacio para alinear -->
+        </header>
+
+        <!-- Contenido de Okuota -->
+        <main class="okuota-content">
+            <!-- Dashboard -->
+            <section class="dashboard">
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <div class="card-title">Cuotas Totales</div>
+                    </div>
+                    <div class="card-value">$24,580</div>
+                    <div class="card-change">
+                        <span>↑</span>
+                        <span>12.5% vs mes anterior</span>
+                    </div>
+                </div>
+
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <div class="card-title">Cuotas Pagadas</div>
+                    </div>
+                    <div class="card-value">$18,430</div>
+                    <div class="card-change">
+                        <span>↑</span>
+                        <span>8.2% vs mes anterior</span>
+                    </div>
+                </div>
+
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <div class="card-title">Cuotas Pendientes</div>
+                    </div>
+                    <div class="card-value">$6,150</div>
+                    <div class="card-change negative">
+                        <span>↓</span>
+                        <span>3.1% vs mes anterior</span>
+                    </div>
+                </div>
+
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <div class="card-title">Tasa de Cumplimiento</div>
+                    </div>
+                    <div class="card-value">94.7%</div>
+                    <div class="card-change">
+                        <span>↑</span>
+                        <span>2.3% vs mes anterior</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Gráficos -->
+            <section class="charts-grid">
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <div class="chart-title">Evolución de Cuotas</div>
+                        <div class="chart-actions">
+                            <button class="chart-btn">Mensual</button>
+                            <button class="chart-btn">Trimestral</button>
+                            <button class="chart-btn">Anual</button>
+                        </div>
+                    </div>
+                    <div class="chart-placeholder">
+                        Gráfico de Evolución de Cuotas
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <div class="chart-title">Distribución por Estado</div>
+                        <div class="chart-actions">
+                            <button class="chart-btn">Ver Reporte</button>
+                        </div>
+                    </div>
+                    <div class="chart-placeholder">
+                        Gráfico de Distribución
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tablas -->
+            <section class="tables-grid">
+                <div class="table-container">
+                    <div class="table-header">
+                        <div class="table-title">Cuotas Recientes</div>
+                        <div class="table-actions">
+                            <button class="table-btn">Exportar</button>
+                            <button class="table-btn primary">Nueva Cuota</button>
+                        </div>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Cliente</th>
+                                <th>Monto</th>
+                                <th>Vencimiento</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Empresa ABC</td>
+                                <td>$1,200</td>
+                                <td>15/03/2024</td>
+                                <td><span class="status paid">Pagada</span></td>
+                            </tr>
+                            <tr>
+                                <td>Corporación XYZ</td>
+                                <td>$3,450</td>
+                                <td>20/03/2024</td>
+                                <td><span class="status pending">Pendiente</span></td>
+                            </tr>
+                            <tr>
+                                <td>Compañía 123</td>
+                                <td>$890</td>
+                                <td>10/03/2024</td>
+                                <td><span class="status overdue">Vencida</span></td>
+                            </tr>
+                            <tr>
+                                <td>Grupo Global</td>
+                                <td>$2,100</td>
+                                <td>25/03/2024</td>
+                                <td><span class="status paid">Pagada</span></td>
+                            </tr>
+                            <tr>
+                                <td>Industrias Norte</td>
+                                <td>$1,750</td>
+                                <td>28/03/2024</td>
+                                <td><span class="status pending">Pendiente</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-container">
+                    <div class="table-header">
+                        <div class="table-title">Próximos Vencimientos</div>
+                        <div class="table-actions">
+                            <button class="table-btn">Filtrar</button>
+                        </div>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Cliente</th>
+                                <th>Monto</th>
+                                <th>Días Restantes</th>
+                                <th>Prioridad</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Tech Solutions</td>
+                                <td>$2,800</td>
+                                <td>2 días</td>
+                                <td><span class="status overdue">Alta</span></td>
+                            </tr>
+                            <tr>
+                                <td>Innovation Labs</td>
+                                <td>$1,500</td>
+                                <td>5 días</td>
+                                <td><span class="status pending">Media</span></td>
+                            </tr>
+                            <tr>
+                                <td>Digital Systems</td>
+                                <td>$3,200</td>
+                                <td>7 días</td>
+                                <td><span class="status pending">Media</span></td>
+                            </tr>
+                            <tr>
+                                <td>Cloud Services</td>
+                                <td>$950</td>
+                                <td>10 días</td>
+                                <td><span class="status paid">Baja</span></td>
+                            </tr>
+                            <tr>
+                                <td>Data Analytics</td>
+                                <td>$2,100</td>
+                                <td>12 días</td>
+                                <td><span class="status paid">Baja</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // ===== INICIALIZACIÓN =====
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+        });
+
+        function initializeApp() {
+            initializeTheme();
+            initializeEventListeners();
+        }
+
+        // ===== TEMA OSCURO =====
+        function initializeTheme() {
+            const toggleThemeBtn = document.getElementById("toggle-theme");
+            if (!toggleThemeBtn) return;
+
+            let darkMode = localStorage.getItem('darkMode') === 'true';
+
+            // Aplicar tema guardado al cargar la página
+            applyTheme(darkMode);
+
+            toggleThemeBtn.addEventListener("click", function() {
+                darkMode = !darkMode;
+                applyTheme(darkMode);
+                localStorage.setItem('darkMode', darkMode);
+            });
+        }
+
+        function applyTheme(isDark) {
+            const toggleThemeBtn = document.getElementById("toggle-theme");
+            if (isDark) {
+                document.body.classList.add("dark-theme");
+                toggleThemeBtn.innerHTML = '<span>☀️</span><span>Modo Claro</span>';
+            } else {
+                document.body.classList.remove("dark-theme");
+                toggleThemeBtn.innerHTML = '<span>🌙</span><span>Modo Oscuro</span>';
+            }
+        }
+
+        // ===== EVENT LISTENERS =====
+        function initializeEventListeners() {
+            const mobileMenuBtn = document.getElementById("mobile-menu-btn");
+            const langSelect = document.getElementById("lang-select");
+
+            // Menú móvil
+            if (mobileMenuBtn) {
+                mobileMenuBtn.addEventListener("click", toggleMobileMenu);
+            }
+
+            // Idioma
+            if (langSelect) {
+                langSelect.addEventListener("change", function(e) {
+                    console.log("Idioma seleccionado:", e.target.value);
+                    // Aquí podrías cargar traducciones dinámicas
+                });
+            }
+
+            // Botones de gráficos
+            const chartButtons = document.querySelectorAll('.chart-btn');
+            chartButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remover clase activa de todos los botones del mismo grupo
+                    const parent = this.closest('.chart-actions');
+                    if (parent) {
+                        parent.querySelectorAll('.chart-btn').forEach(btn => {
+                            btn.style.background = '';
+                            btn.style.color = '';
+                        });
+                    }
+
+                    // Aplicar estilo al botón clickeado
+                    this.style.background = '#4f46e5';
+                    this.style.color = '#fff';
+
+                    console.log('Botón de gráfico clickeado:', this.textContent);
+                });
+            });
+
+            // Botones de tablas
+            const tableButtons = document.querySelectorAll('.table-btn');
+            tableButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const action = this.textContent.toLowerCase();
+                    handleTableAction(action);
+                });
+            });
+
+            // Cerrar menú al hacer clic fuera
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.navbar') && !e.target.closest('#mobile-menu-btn')) {
+                    document.querySelector('.navbar').classList.remove('nav-visible');
+                }
+            });
+        }
+
+        function toggleMobileMenu() {
+            const navbar = document.querySelector('.navbar');
+            navbar.classList.toggle('nav-visible');
+        }
+
+        function handleTableAction(action) {
+            switch(action) {
+                case 'exportar':
+                    alert('Funcionalidad de exportación activada');
+                    // Aquí iría la lógica de exportación
+                    break;
+                case 'nueva cuota':
+                    alert('Creando nueva cuota...');
+                    // Aquí iría el modal/formulario para nueva cuota
+                    break;
+                case 'filtrar':
+                    alert('Aplicando filtros...');
+                    // Aquí iría la lógica de filtrado
+                    break;
+                default:
+                    console.log('Acción de tabla:', action);
+            }
+        }
+
+        // ===== RESPONSIVE =====
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) {
+                document.querySelector('.navbar').classList.remove('nav-visible');
+            }
+        });
+
+        // Simular datos dinámicos (para demostración)
+        function updateDashboardData() {
+            // En una aplicación real, aquí se haría una llamada API
+            console.log('Actualizando datos del dashboard...');
+        }
+
+        // Actualizar datos cada 30 segundos (simulación)
+        setInterval(updateDashboardData, 30000);
+    </script>
+</body>
+</html>

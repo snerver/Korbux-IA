@@ -1,0 +1,1763 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KORBUX IA - Chat Inteligente</title>
+    <meta name="description" content="KORBUX IA: Tu asistente de inteligencia artificial local y privado." />
+    <link rel="icon" href="assets/img/logo.png" type="image/png">
+
+    <style>
+        /* === RESET Y VARIABLES === */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Paleta de colores profesional y legible */
+            --bg: #1a1f36;
+            --bg-elev-1: #252b42;
+            --bg-elev-2: #2f3651;
+            --border: #3a4260;
+            --text: #e2e8f0;
+            --text-dim: #94a3b8;
+            --accent: #6366f1;
+            --accent-light: #818cf8;
+            --accent-2: #06b6d4;
+            --success: #10b981;
+            --success-light: #34d399;
+            --warning: #f59e0b;
+            --warning-light: #fbbf24;
+            --danger: #ef4444;
+            --danger-light: #f87171;
+            --shadow: rgba(0, 0, 0, 0.25);
+            --shadow-hover: rgba(0, 0, 0, 0.35);
+            /* Colores para tema claro */
+            --light-bg: #f8fafc;
+            --light-bg-elev-1: #ffffff;
+            --light-bg-elev-2: #f1f5f9;
+            --light-border: #e2e8f0;
+            --light-text: #334155;
+            --light-text-dim: #64748b;
+        }
+
+        /* === BASE === */
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        /* === NAVBAR LATERAL === */
+        .navbar {
+            background: var(--bg-elev-1);
+            color: var(--text);
+            padding: 1.5rem 1rem;
+            width: 280px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 2px 0 16px var(--shadow);
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+            border-right: 1px solid var(--border);
+        }
+
+            .navbar .brand {
+                font-size: 1.5rem;
+                font-weight: 700;
+                text-align: center;
+                background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+                color: white;
+                padding: 1rem;
+                border-radius: 12px;
+                margin-bottom: 2rem;
+                text-decoration: none;
+                display: block;
+                transition: all 0.3s ease;
+                box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+            }
+
+                .navbar .brand:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+                }
+
+        /* Sección principal de navegación */
+        .nav-section {
+            margin-bottom: 2rem;
+        }
+
+        .nav-section-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.75rem;
+            padding: 0 0.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+            .nav-links a {
+                color: var(--text);
+                text-decoration: none;
+                padding: 0.75rem 1rem;
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+                transition: all 0.3s ease;
+                font-weight: 500;
+                background: transparent;
+            }
+
+                .nav-links a:hover {
+                    background: var(--bg-elev-2);
+                    color: var(--accent-light);
+                    transform: translateX(4px);
+                }
+
+                .nav-links a.active {
+                    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+                    color: white;
+                    font-weight: 600;
+                }
+
+        /* Controles en la parte inferior */
+        .nav-controls {
+            margin-top: auto;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .control-group {
+            margin-bottom: 1rem;
+        }
+
+            .control-group:last-child {
+                margin-bottom: 0;
+            }
+
+        #lang-select {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--bg-elev-2);
+            color: var(--text);
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+            #lang-select:focus {
+                outline: none;
+                border-color: var(--accent);
+                box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+            }
+
+        #toggle-theme {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--bg-elev-2);
+            color: var(--text);
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-weight: 500;
+        }
+
+            #toggle-theme:hover {
+                background: var(--bg-elev-1);
+                border-color: var(--accent);
+            }
+
+        /* === CONTENIDO PRINCIPAL === */
+        .main-container {
+            flex: 1;
+            margin-left: 280px;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left 0.3s ease;
+        }
+
+        /* Header mejorado */
+        .content-header {
+            background: var(--bg-elev-1);
+            padding: 1rem 2rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px var(--shadow);
+            position: relative;
+            z-index: 10;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: var(--bg-elev-2);
+            border: 1px solid var(--border);
+            font-size: 1.25rem;
+            cursor: pointer;
+            color: var(--accent-light);
+            border-radius: 8px;
+            padding: 0.5rem 0.75rem;
+            transition: all 0.3s ease;
+        }
+
+            .mobile-menu-btn:hover {
+                background: var(--bg-elev-1);
+                border-color: var(--accent);
+            }
+
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+        }
+
+        .header-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border);
+            background: var(--bg-elev-2);
+            color: var(--text);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+            .header-btn:hover {
+                background: var(--bg-elev-1);
+                border-color: var(--accent);
+                transform: translateY(-1px);
+            }
+
+            .header-btn.primary {
+                background: linear-gradient(135deg, var(--success) 0%, var(--success-light) 100%);
+                color: white;
+                border: none;
+            }
+
+                .header-btn.primary:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+                }
+
+        /* Contenido principal reorganizado */
+        .main-content {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* Sidebar mejorado */
+        .sidebar {
+            width: 320px;
+            background: var(--bg-elev-1);
+            border-right: 1px solid var(--border);
+            padding: 1.5rem;
+            overflow-y: auto;
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .sidebar-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 1rem;
+        }
+
+        .chat-actions-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .chat-action-btn {
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            background: var(--bg-elev-2);
+            color: var(--text);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+            .chat-action-btn:hover {
+                background: var(--bg-elev-1);
+                border-color: var(--accent);
+                transform: translateY(-2px);
+            }
+
+            .chat-action-btn.export {
+                background: linear-gradient(135deg, var(--accent-2) 0%, #22d3ee 100%);
+                color: white;
+                border: none;
+            }
+
+            .chat-action-btn.import {
+                background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+                color: white;
+                border: none;
+            }
+
+        /* Lista de chats mejorada */
+        .chats-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chats-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .chats-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .chats-count {
+            background: var(--bg-elev-2);
+            color: var(--text-dim);
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        #chat-list {
+            list-style: none;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+            #chat-list li {
+                padding: 1rem;
+                border-radius: 8px;
+                cursor: pointer;
+                margin-bottom: 0.5rem;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                transition: all 0.3s ease;
+                color: var(--text);
+                position: relative;
+                border: 1px solid transparent;
+                background: var(--bg-elev-2);
+            }
+
+                #chat-list li:hover {
+                    background: var(--bg-elev-1);
+                    border-color: var(--border);
+                }
+
+                #chat-list li.active {
+                    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+                    color: white;
+                    font-weight: 600;
+                    border-color: var(--accent);
+                    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+                }
+
+        .chat-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .chat-name {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .chat-preview {
+            font-size: 0.8rem;
+            color: inherit;
+            opacity: 0.8;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .chat-time {
+            font-size: 0.75rem;
+            opacity: 0.7;
+            white-space: nowrap;
+            margin-left: 0.5rem;
+        }
+
+        .chat-actions {
+            position: absolute;
+            right: 0.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            display: flex;
+            gap: 0.25rem;
+            background: rgba(37, 43, 66, 0.9);
+            border-radius: 6px;
+            padding: 0.25rem;
+        }
+
+        #chat-list li:hover .chat-actions {
+            opacity: 1;
+        }
+
+        #chat-list li.active .chat-actions {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .chat-action-btn-small {
+            background: none;
+            border: none;
+            color: var(--text);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            transition: all 0.3s ease;
+        }
+
+        #chat-list li.active .chat-action-btn-small {
+            color: white;
+        }
+
+        .chat-action-btn-small:hover {
+            background: var(--danger);
+            color: white;
+        }
+
+        .chat-action-btn-small.rename:hover {
+            background: var(--warning);
+        }
+
+        /* === SECCIÓN DE CHAT === */
+        .chat-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: var(--bg);
+            overflow: hidden;
+        }
+
+        /* Área de chat mejorada */
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 1.5rem;
+            gap: 1rem;
+        }
+
+        #chat-history {
+            flex: 1;
+            background: var(--bg-elev-1);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            overflow-y: auto;
+            box-shadow: inset 0 2px 6px var(--shadow);
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .empty-chat {
+            text-align: center;
+            color: var(--text-dim);
+            padding: 3rem;
+            font-style: italic;
+            font-size: 1.1rem;
+        }
+
+        /* Input area reorganizada */
+        .input-section {
+            background: var(--bg-elev-1);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+
+        #chat-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .input-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .input-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .input-btn {
+            background: var(--bg-elev-2);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 0.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+        }
+
+            .input-btn:hover {
+                background: var(--bg-elev-1);
+                border-color: var(--accent);
+                transform: translateY(-1px);
+            }
+
+            .input-btn.listening {
+                background: var(--danger);
+                color: white;
+                animation: pulse 1.5s infinite;
+            }
+
+        #message-input {
+            resize: none;
+            min-height: 80px;
+            max-height: 200px;
+            padding: 1rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: inherit;
+            background: var(--bg-elev-2);
+            color: var(--text);
+            transition: all 0.3s ease;
+            line-height: 1.5;
+        }
+
+            #message-input::placeholder {
+                color: var(--text-dim);
+            }
+
+            #message-input:focus {
+                outline: none;
+                border-color: var(--accent);
+                box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+            }
+
+        .input-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .input-hint {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
+
+        #send-btn {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+            #send-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+            }
+
+            #send-btn:active {
+                transform: translateY(0);
+            }
+
+            #send-btn:disabled {
+                background: var(--bg-elev-2);
+                color: var(--text-dim);
+                cursor: not-allowed;
+                transform: none;
+                box-shadow: none;
+            }
+
+        /* === MENSAJES MEJORADOS === */
+        .message {
+            display: flex;
+            gap: 0.75rem;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .bot-message {
+            justify-content: flex-start;
+        }
+
+        .user-message {
+            justify-content: flex-end;
+        }
+
+        .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            flex-shrink: 0;
+            font-size: 0.9rem;
+        }
+
+        .user-message .avatar {
+            background: linear-gradient(135deg, var(--success) 0%, var(--success-light) 100%);
+        }
+
+        .message-content {
+            max-width: 70%;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .bubble {
+            padding: 1rem 1.25rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px var(--shadow);
+            line-height: 1.5;
+            word-wrap: break-word;
+            position: relative;
+        }
+
+        .bot-message .bubble {
+            background: var(--bg-elev-2);
+            border: 1px solid var(--border);
+            color: var(--text);
+            border-bottom-left-radius: 4px;
+        }
+
+        .user-message .bubble {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message-time {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            opacity: 0.7;
+        }
+
+        .user-message .message-time {
+            color: rgba(255, 255, 255, 0.8);
+            text-align: right;
+        }
+
+        /* === ANIMACIONES === */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: none;
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+            }
+
+            70% {
+                box-shadow: 0 0 0 8px rgba(239, 68, 68, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+            }
+        }
+
+        /* === TEMA CLARO MEJORADO === */
+        body.light-theme {
+            background-color: var(--light-bg);
+            color: var(--light-text);
+        }
+
+            body.light-theme .navbar {
+                background: var(--light-bg-elev-1);
+                color: var(--light-text);
+                border-right-color: var(--light-border);
+            }
+
+            body.light-theme .nav-links a {
+                color: var(--light-text);
+            }
+
+                body.light-theme .nav-links a:hover {
+                    background: var(--light-bg-elev-2);
+                    color: var(--accent);
+                }
+
+            body.light-theme .nav-controls {
+                border-top-color: var(--light-border);
+            }
+
+            body.light-theme #lang-select,
+            body.light-theme #toggle-theme {
+                background: var(--light-bg-elev-1);
+                border-color: var(--light-border);
+                color: var(--light-text);
+            }
+
+            body.light-theme .content-header,
+            body.light-theme .sidebar {
+                background: var(--light-bg-elev-1);
+                border-color: var(--light-border);
+            }
+
+            body.light-theme .chat-section {
+                background: var(--light-bg);
+            }
+
+            body.light-theme #chat-history {
+                background: var(--light-bg-elev-1);
+                border-color: var(--light-border);
+            }
+
+            body.light-theme .input-section {
+                background: var(--light-bg-elev-1);
+                border-color: var(--light-border);
+            }
+
+            body.light-theme #message-input {
+                background: var(--light-bg-elev-1);
+                color: var(--light-text);
+                border-color: var(--light-border);
+            }
+
+            body.light-theme .input-btn {
+                background: var(--light-bg-elev-2);
+                border-color: var(--light-border);
+                color: var(--light-text);
+            }
+
+            body.light-theme .bot-message .bubble {
+                background: var(--light-bg-elev-2);
+                border-color: var(--light-border);
+                color: var(--light-text);
+            }
+
+            body.light-theme #chat-list li {
+                background: var(--light-bg-elev-2);
+            }
+
+                body.light-theme #chat-list li:hover {
+                    background: var(--light-bg-elev-1);
+                }
+
+            body.light-theme .chat-actions {
+                background: rgba(255, 255, 255, 0.9);
+            }
+
+        /* === RESPONSIVE MEJORADO === */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 280px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar, .sidebar {
+                transform: translateX(-100%);
+                position: fixed;
+                z-index: 1000;
+                top: 0;
+                height: 100vh;
+            }
+
+                .navbar.nav-visible, .sidebar.sidebar-visible {
+                    transform: translateX(0);
+                }
+
+            .main-container {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            .mobile-menu-btn {
+                display: flex;
+            }
+
+            .content-header {
+                padding: 1rem;
+            }
+
+            .chat-container {
+                padding: 1rem;
+            }
+
+            .message-content {
+                max-width: 85%;
+            }
+
+            .header-actions {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .chat-actions-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .message-content {
+                max-width: 90%;
+            }
+
+            .chat-container {
+                padding: 0.75rem;
+            }
+
+            #chat-history {
+                padding: 1rem;
+            }
+
+            .input-section {
+                padding: 1rem;
+            }
+
+            .bubble {
+                padding: 0.75rem 1rem;
+            }
+        }
+
+        /* === COMPONENTES RESTANTES === */
+        #global-loader {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.95);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            flex-direction: column;
+            color: white;
+            font-size: 1.2rem;
+            text-align: center;
+            backdrop-filter: blur(4px);
+        }
+
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top: 3px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 1rem;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            display: none;
+        }
+
+        /* Scrollbars mejorados */
+        #chat-history::-webkit-scrollbar,
+        .sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        #chat-history::-webkit-scrollbar-track,
+        .sidebar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        #chat-history::-webkit-scrollbar-thumb,
+        .sidebar::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px;
+        }
+
+            #chat-history::-webkit-scrollbar-thumb:hover,
+            .sidebar::-webkit-scrollbar-thumb:hover {
+                background: var(--accent);
+            }
+
+        body.light-theme #chat-history::-webkit-scrollbar-thumb,
+        body.light-theme .sidebar::-webkit-scrollbar-thumb {
+            background: var(--light-border);
+        }
+
+        /* Animaciones adicionales para notificaciones */
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- OVERLAY PARA MÓVIL -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- NAVBAR LATERAL -->
+    <nav class="navbar" id="navbar">
+        <!-- Brand -->
+        <a href="#" class="brand" id="brand-btn">
+            <strong>KORBUX IA</strong>
+        </a>
+
+        <!-- Navegación Principal -->
+        <div class="nav-section">
+            <div class="nav-section-title">Módulos</div>
+            <div class="nav-links">
+                <a href="okuota.html" data-page="okuota" class="active">📊 Análisis de Datos</a>
+                <a href="monet.html" data-page="monet">🎨 Creative AI</a>
+                <a href="ditters.html" data-page="ditters">🔬 Investigación</a>
+                <a href="jean.html" data-page="jean">📈 Business Intelligence</a>
+            </div>
+        </div>
+
+        <!-- Herramientas -->
+        <div class="nav-section">
+            <div class="nav-section-title">Herramientas</div>
+            <div class="nav-links">
+                <a href="lovelace.html" data-page="lovelace">💻 Desarrollo</a>
+                <a href="santaolalla.html" data-page="santaolalla">📚 Biblioteca</a>
+                <a href="perfil.html" data-page="perfil">👤 Mi Perfil</a>
+                <a href="historial.html" data-page="historial">📋 Historial</a>
+            </div>
+        </div>
+
+        <!-- Controles -->
+        <div class="nav-controls">
+            <div class="control-group">
+                <select id="lang-select">
+                    <option value="es" selected>🇪🇸 Español</option>
+                    <option value="en">🇺🇸 English</option>
+                    <option value="fr">🇫🇷 Français</option>
+                    <option value="de">🇩🇪 Deutsch</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <button id="toggle-theme" type="button">
+                    <span>☀️</span>
+                    <span>Modo Claro</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <div class="main-container">
+        <!-- Header Mejorado -->
+        <header class="content-header">
+            <div class="header-left">
+                <button class="mobile-menu-btn" id="mobile-menu-btn" type="button" aria-label="Menú principal">
+                    ☰
+                </button>
+                <h1 class="page-title">Asistente KORBUX IA</h1>
+            </div>
+            <div class="header-actions">
+                <button class="header-btn" id="clear-chat-btn" type="button">
+                    🧹 Limpiar
+                </button>
+                <button class="header-btn primary" id="new-chat-btn" type="button">
+                    + Nueva Conversación
+                </button>
+            </div>
+        </header>
+
+        <!-- Contenido Principal -->
+        <div class="main-content">
+            <!-- Sidebar Reorganizado -->
+            <aside class="sidebar" id="sidebar">
+                <div class="sidebar-header">
+                    <div class="sidebar-title">Gestión de Conversaciones</div>
+                    <div class="chat-actions-grid">
+                        <button class="chat-action-btn export" id="export-chats-btn" type="button">
+                            📤
+                            <span>Exportar</span>
+                        </button>
+                        <button class="chat-action-btn import" id="import-chats-btn" type="button">
+                            📥
+                            <span>Importar</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="chats-section">
+                    <div class="chats-header">
+                        <div class="chats-title">Conversaciones</div>
+                        <div class="chats-count" id="chats-count">0 chats</div>
+                    </div>
+                    <ul id="chat-list">
+                        <!-- Las conversaciones se cargan dinámicamente -->
+                    </ul>
+                </div>
+            </aside>
+
+            <!-- Área de Chat -->
+            <section class="chat-section">
+                <div class="chat-container">
+                    <!-- Historial de Chat -->
+                    <div id="chat-history" aria-live="polite">
+                        <div class="empty-chat">
+                            💬 Bienvenido a KORBUX IA<br>
+                            <small>Inicia una conversación para comenzar</small>
+                        </div>
+                    </div>
+
+                    <!-- Área de Input Mejorada -->
+                    <div class="input-section">
+                        <form id="chat-form">
+                            <div class="input-header">
+                                <div class="input-actions">
+                                    <button class="input-btn" id="voice-input-btn" type="button" title="Entrada de voz">
+                                        🎤
+                                    </button>
+                                    <button class="input-btn" id="attach-file-btn" type="button" title="Adjuntar archivo">
+                                        📎
+                                    </button>
+                                </div>
+                            </div>
+
+                            <textarea id="message-input"
+                                      placeholder="Escribe tu mensaje aquí... (Enter para enviar, Shift+Enter para nueva línea)"
+                                      rows="3"
+                                      autofocus
+                                      aria-label="Escribe tu mensaje"></textarea>
+
+                            <div class="input-footer">
+                                <div class="input-hint">
+                                    KORBUX IA · Asistente Inteligente
+                                </div>
+                                <button id="send-btn" type="submit">
+                                    <span>Enviar</span>
+                                    <span>⚡</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Loader -->
+    <div id="global-loader">
+        <div class="spinner"></div>
+        <div class="loader-text">KORBUX IA está procesando...</div>
+    </div>
+
+    <!-- Input oculto para importar archivos -->
+    <input type="file" id="file-input" accept=".json,.txt" style="display: none;">
+
+    <!-- SCRIPT COMPLETO -->
+    <script>
+        // === ESTADO DE LA APLICACIÓN ===
+        const appState = {
+            currentChat: null,
+            chats: [],
+            isListening: false,
+            recognition: null
+        };
+
+        // === FUNCIONES DE GESTIÓN DE CHATS ===
+        function crearNuevoChat() {
+            const chatId = 'chat_' + Date.now();
+            const nuevoChat = {
+                id: chatId,
+                nombre: `Conversación ${appState.chats.length + 1}`,
+                mensajes: [],
+                timestamp: Date.now(),
+                ultimoMensaje: 'Nueva conversación'
+            };
+
+            appState.chats.unshift(nuevoChat);
+            appState.currentChat = nuevoChat;
+            actualizarListaChats();
+            limpiarChat();
+            addMessage('bot', '¡Nueva conversación iniciada!<br><br>¿En qué te puedo ayudar ahora?');
+
+            guardarChats();
+        }
+
+        function eliminarChat(chatId) {
+            if (confirm('¿Estás seguro de que quieres eliminar esta conversación?')) {
+                appState.chats = appState.chats.filter(chat => chat.id !== chatId);
+
+                if (appState.currentChat && appState.currentChat.id === chatId) {
+                    if (appState.chats.length > 0) {
+                        appState.currentChat = appState.chats[0];
+                        cargarChat(appState.currentChat);
+                    } else {
+                        appState.currentChat = null;
+                        crearNuevoChat();
+                    }
+                }
+
+                actualizarListaChats();
+                guardarChats();
+            }
+        }
+
+        function renombrarChat(chatId) {
+            const chat = appState.chats.find(c => c.id === chatId);
+            if (chat) {
+                const nuevoNombre = prompt('Nuevo nombre para la conversación:', chat.nombre);
+                if (nuevoNombre && nuevoNombre.trim()) {
+                    chat.nombre = nuevoNombre.trim();
+                    actualizarListaChats();
+                    guardarChats();
+                }
+            }
+        }
+
+        function cargarChat(chat) {
+            appState.currentChat = chat;
+            limpiarChat();
+
+            if (chat.mensajes && Array.isArray(chat.mensajes)) {
+                chat.mensajes.forEach(mensaje => {
+                    addMessage(mensaje.tipo, mensaje.contenido);
+                });
+            }
+
+            actualizarListaChats();
+        }
+
+        function actualizarListaChats() {
+            const chatList = document.getElementById('chat-list');
+            if (!chatList) return;
+
+            chatList.innerHTML = '';
+
+            appState.chats.forEach(chat => {
+                const li = document.createElement('li');
+                li.className = appState.currentChat && appState.currentChat.id === chat.id ? 'active' : '';
+
+                const tiempo = formatearTiempo(chat.timestamp);
+
+                li.innerHTML = `
+                            <div class="chat-info">
+                                <div class="chat-name">${escapeHtml(chat.nombre)}</div>
+                                <div class="chat-preview">${escapeHtml(chat.ultimoMensaje)}</div>
+                            </div>
+                            <div class="chat-time">${tiempo}</div>
+                            <div class="chat-actions">
+                                <button class="chat-action-btn-small rename" onclick="event.stopPropagation(); renombrarChat('${chat.id}')" title="Renombrar">✏️</button>
+                                <button class="chat-action-btn-small" onclick="event.stopPropagation(); eliminarChat('${chat.id}')" title="Eliminar">🗑️</button>
+                            </div>
+                        `;
+
+                li.addEventListener('click', (e) => {
+                    if (!e.target.classList.contains('chat-action-btn-small')) {
+                        cargarChat(chat);
+                    }
+                });
+
+                chatList.appendChild(li);
+            });
+
+            const chatsCount = document.getElementById('chats-count');
+            if (chatsCount) {
+                chatsCount.textContent = `${appState.chats.length} ${appState.chats.length === 1 ? 'chat' : 'chats'}`;
+            }
+        }
+
+        // === FUNCIONES DE PERSISTENCIA ===
+        function guardarChats() {
+            safeSetItem('korbux_chats', JSON.stringify(appState.chats));
+        }
+
+        function cargarChats() {
+            const chatsGuardados = safeGetItem('korbux_chats');
+            if (chatsGuardados) {
+                try {
+                    appState.chats = JSON.parse(chatsGuardados);
+                    if (appState.chats.length > 0) {
+                        appState.currentChat = appState.chats[0];
+                        cargarChat(appState.currentChat);
+                    } else {
+                        crearNuevoChat();
+                    }
+                } catch (e) {
+                    console.error('Error al cargar chats:', e);
+                    crearNuevoChat();
+                }
+            } else {
+                crearNuevoChat();
+            }
+        }
+
+        // === FUNCIONES DE INTERFAZ ===
+        function safeGetItem(key) {
+            try {
+                return localStorage.getItem(key);
+            } catch (e) {
+                console.warn("localStorage no disponible:", e);
+                return null;
+            }
+        }
+
+        function safeSetItem(key, value) {
+            try {
+                localStorage.setItem(key, value);
+                return true;
+            } catch (e) {
+                console.warn("No se pudo guardar en localStorage:", e);
+                return false;
+            }
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function addMessage(sender, text) {
+            const history = document.getElementById("chat-history");
+            if (!history) return;
+
+            const emptyChat = history.querySelector('.empty-chat');
+            if (emptyChat) {
+                emptyChat.remove();
+            }
+
+            const div = document.createElement("div");
+            div.className = "message " + sender + "-message";
+
+            const avatar = sender === "user" ? "T" : "K";
+            const tiempo = new Date().toLocaleTimeString('es-ES', {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+
+            const bubble = `
+                        <div class="bubble">${String(text).replace(/\n/g, "<br>")}</div>
+                        <div class="message-time">${tiempo}</div>
+                    `;
+            const avatarHtml = `<div class="avatar">${avatar}</div>`;
+
+            div.innerHTML = sender === "user" ?
+                `<div class="message-content">${bubble}</div>${avatarHtml}` :
+                `${avatarHtml}<div class="message-content">${bubble}</div>`;
+
+            history.appendChild(div);
+            history.scrollTop = history.scrollHeight;
+
+            if (appState.currentChat) {
+                if (!appState.currentChat.mensajes) {
+                    appState.currentChat.mensajes = [];
+                }
+                appState.currentChat.mensajes.push({
+                    tipo: sender,
+                    contenido: text,
+                    timestamp: Date.now()
+                });
+                appState.currentChat.ultimoMensaje = sender === 'user' ?
+                    (text.length > 30 ? text.substring(0, 30) + '...' : text) :
+                    'Respuesta de KORBUX';
+                appState.currentChat.timestamp = Date.now();
+                guardarChats();
+                actualizarListaChats();
+            }
+        }
+
+        function enviarMensaje() {
+            const input = document.getElementById("message-input");
+            if (!input) return;
+
+            const texto = input.value.trim();
+            if (!texto) {
+                input.focus();
+                return;
+            }
+
+            addMessage("user", texto);
+            input.value = "";
+            input.style.height = "auto";
+
+            mostrarCargando("KORBUX IA está procesando...");
+
+            setTimeout(function () {
+                ocultarCargando();
+                const respuestas = [
+                    `¡Interesante! "${texto}" es un tema fascinante. ¿Qué más te gustaría saber?`,
+                    `Perfecto, he procesado tu solicitud sobre "${texto}". ¿En qué más puedo ayudarte?`,
+                    `¡Excelente pregunta! "${texto}" es algo que puedo explicarte en detalle.`,
+                    `He analizado "${texto}" y tengo información valiosa para compartir contigo.`,
+                    `¡Genial! "${texto}" es un tema que domino bastante bien. ¿Quieres que profundice?`
+                ];
+                const respuesta = respuestas[Math.floor(Math.random() * respuestas.length)];
+                addMessage("bot", respuesta);
+            }, 1500 + Math.random() * 1000);
+        }
+
+        function limpiarChat() {
+            const history = document.getElementById("chat-history");
+            if (history) {
+                history.innerHTML = '<div class="empty-chat">💬 Bienvenido a KORBUX IA<br><small>Inicia una conversación para comenzar</small></div>';
+            }
+
+            if (appState.currentChat) {
+                appState.currentChat.mensajes = [];
+                guardarChats();
+            }
+        }
+
+        function exportarChats() {
+            const dataStr = JSON.stringify(appState.chats, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(dataBlob);
+            link.download = `korbux_chats_${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+
+            mostrarNotificacion('Chats exportados correctamente', 'success');
+        }
+
+        function importarChats() {
+            document.getElementById('file-input').click();
+        }
+
+        function manejarImportacionArchivo(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                try {
+                    const chatsImportados = JSON.parse(e.target.result);
+                    if (Array.isArray(chatsImportados)) {
+                        appState.chats = chatsImportados;
+                        if (appState.chats.length > 0) {
+                            appState.currentChat = appState.chats[0];
+                            cargarChat(appState.currentChat);
+                        }
+                        guardarChats();
+                        actualizarListaChats();
+                        mostrarNotificacion('Chats importados correctamente', 'success');
+                    } else {
+                        throw new Error('Formato inválido');
+                    }
+                } catch (error) {
+                    mostrarNotificacion('Error al importar chats: formato inválido', 'error');
+                }
+            };
+            reader.readAsText(file);
+
+            event.target.value = '';
+        }
+
+        // === FUNCIONALIDAD DE VOZ ===
+        function toggleReconocimientoVoz() {
+            const btn = document.getElementById('voice-input-btn');
+            if (!btn) return;
+
+            if (!appState.isListening) {
+                iniciarReconocimientoVoz();
+                btn.classList.add('listening');
+                btn.innerHTML = '🔴';
+                appState.isListening = true;
+            } else {
+                detenerReconocimientoVoz();
+                btn.classList.remove('listening');
+                btn.innerHTML = '🎤';
+                appState.isListening = false;
+            }
+        }
+
+        function iniciarReconocimientoVoz() {
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                appState.recognition = new SpeechRecognition();
+
+                appState.recognition.continuous = false;
+                appState.recognition.interimResults = false;
+                appState.recognition.lang = 'es-ES';
+
+                appState.recognition.onresult = function (event) {
+                    const transcript = event.results[0][0].transcript;
+                    const input = document.getElementById('message-input');
+                    if (input) {
+                        input.value = transcript;
+                        ajustarAltura({ target: input });
+                    }
+                };
+
+                appState.recognition.onerror = function (event) {
+                    console.error('Error en reconocimiento de voz:', event.error);
+                    mostrarNotificacion('Error en reconocimiento de voz', 'error');
+                    detenerReconocimientoVoz();
+                };
+
+                appState.recognition.onend = function () {
+                    detenerReconocimientoVoz();
+                };
+
+                appState.recognition.start();
+            } else {
+                mostrarNotificacion('Reconocimiento de voz no soportado en este navegador', 'warning');
+            }
+        }
+
+        function detenerReconocimientoVoz() {
+            if (appState.recognition) {
+                appState.recognition.stop();
+            }
+            const btn = document.getElementById('voice-input-btn');
+            if (btn) {
+                btn.classList.remove('listening');
+                btn.innerHTML = '🎤';
+            }
+            appState.isListening = false;
+        }
+
+        // === FUNCIONES AUXILIARES ===
+        function formatearTiempo(timestamp) {
+            const ahora = Date.now();
+            const diferencia = ahora - timestamp;
+            const minutos = Math.floor(diferencia / 60000);
+            const horas = Math.floor(diferencia / 3600000);
+            const dias = Math.floor(diferencia / 86400000);
+
+            if (minutos < 1) return 'Ahora';
+            if (minutos < 60) return `Hace ${minutos}m`;
+            if (horas < 24) return `Hace ${horas}h`;
+            if (dias < 7) return `Hace ${dias}d`;
+
+            return new Date(timestamp).toLocaleDateString();
+        }
+
+        function mostrarCargando(texto) {
+            const loader = document.getElementById("global-loader");
+            if (!loader) return;
+            const loaderText = loader.querySelector(".loader-text");
+            if (loaderText) loaderText.textContent = texto;
+            loader.style.display = "flex";
+        }
+
+        function ocultarCargando() {
+            const loader = document.getElementById("global-loader");
+            if (loader) loader.style.display = "none";
+        }
+
+        function mostrarNotificacion(mensaje, tipo = 'info') {
+            const notificacion = document.createElement('div');
+            notificacion.style.cssText = `
+                        position: fixed;
+                        top: 20px;
+                        right: 20px;
+                        padding: 1rem 1.5rem;
+                        border-radius: 8px;
+                        color: white;
+                        font-weight: 600;
+                        z-index: 10000;
+                        animation: slideIn 0.3s ease;
+                        max-width: 300px;
+                    `;
+
+            const colores = {
+                success: 'linear-gradient(135deg, var(--success) 0%, var(--success-light) 100%)',
+                error: 'linear-gradient(135deg, var(--danger) 0%, var(--danger-light) 100%)',
+                warning: 'linear-gradient(135deg, var(--warning) 0%, var(--warning-light) 100%)',
+                info: 'linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%)'
+            };
+
+            notificacion.style.background = colores[tipo] || colores.info;
+            notificacion.textContent = mensaje;
+
+            document.body.appendChild(notificacion);
+
+            setTimeout(() => {
+                notificacion.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    if (notificacion.parentNode) {
+                        notificacion.parentNode.removeChild(notificacion);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        function ajustarAltura(e) {
+            const target = e.target;
+            target.style.height = "auto";
+            target.style.height = Math.min(target.scrollHeight, 200) + "px";
+        }
+
+        function alternarTema() {
+            const toggleThemeBtn = document.getElementById("toggle-theme");
+            const isLight = document.body.classList.contains("light-theme");
+
+            if (isLight) {
+                document.body.classList.remove("light-theme");
+                if (toggleThemeBtn) {
+                    toggleThemeBtn.innerHTML = '<span>☀️</span><span>Modo Claro</span>';
+                }
+            } else {
+                document.body.classList.add("light-theme");
+                if (toggleThemeBtn) {
+                    toggleThemeBtn.innerHTML = '<span>🌙</span><span>Modo Oscuro</span>';
+                }
+            }
+            safeSetItem("theme", isLight ? "dark" : "light");
+        }
+
+        function toggleNavbar() {
+            const navbar = document.getElementById("navbar");
+            const overlay = document.getElementById("overlay");
+            if (navbar && overlay) {
+                navbar.classList.toggle("nav-visible");
+                overlay.style.display = navbar.classList.contains("nav-visible") ? "block" : "none";
+            }
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById("sidebar");
+            const overlay = document.getElementById("overlay");
+            if (sidebar && overlay) {
+                sidebar.classList.toggle("sidebar-visible");
+                overlay.style.display = sidebar.classList.contains("sidebar-visible") ? "block" : "none";
+            }
+        }
+
+        function setupOverlay() {
+            const overlay = document.getElementById("overlay");
+            if (overlay) {
+                overlay.addEventListener("click", function () {
+                    const navbar = document.getElementById("navbar");
+                    const sidebar = document.getElementById("sidebar");
+                    if (navbar) navbar.classList.remove("nav-visible");
+                    if (sidebar) sidebar.classList.remove("sidebar-visible");
+                    overlay.style.display = "none";
+                });
+            }
+        }
+
+        // === INICIALIZACIÓN ===
+        document.addEventListener("DOMContentLoaded", function () {
+            // Cargar datos iniciales
+            cargarChats();
+
+            // Configurar tema
+            const savedTheme = safeGetItem("theme");
+            const toggleThemeBtn = document.getElementById("toggle-theme");
+            if (savedTheme === "light") {
+                document.body.classList.add("light-theme");
+                if (toggleThemeBtn) toggleThemeBtn.innerHTML = '<span>🌙</span><span>Modo Oscuro</span>';
+            } else {
+                if (toggleThemeBtn) toggleThemeBtn.innerHTML = '<span>☀️</span><span>Modo Claro</span>';
+                safeSetItem("theme", "dark");
+            }
+
+            // Configurar event listeners de forma segura
+            const chatForm = document.getElementById("chat-form");
+            if (chatForm) {
+                chatForm.addEventListener("submit", (e) => {
+                    e.preventDefault();
+                    enviarMensaje();
+                });
+            }
+
+            const messageInput = document.getElementById("message-input");
+            if (messageInput) {
+                messageInput.addEventListener("input", ajustarAltura);
+                messageInput.addEventListener("keydown", (e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                        e.preventDefault();
+                        enviarMensaje();
+                    }
+                });
+            }
+
+            // Configurar botones de forma segura
+            const setupButton = (id, handler) => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.addEventListener("click", handler);
+                }
+            };
+
+            setupButton("new-chat-btn", crearNuevoChat);
+            setupButton("clear-chat-btn", limpiarChat);
+            setupButton("export-chats-btn", exportarChats);
+            setupButton("import-chats-btn", importarChats);
+            setupButton("voice-input-btn", toggleReconocimientoVoz);
+            setupButton("attach-file-btn", () => {
+                mostrarNotificacion('Funcionalidad de adjuntar archivos en desarrollo', 'info');
+            });
+            setupButton("toggle-theme", alternarTema);
+            setupButton("mobile-menu-btn", toggleNavbar);
+
+            // Configurar botón de marca
+            const brandBtn = document.getElementById("brand-btn");
+            if (brandBtn) {
+                brandBtn.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    crearNuevoChat();
+                    mostrarNotificacion('¡Bienvenido a KORBUX IA!', 'success');
+                });
+            }
+
+            // Configurar otros elementos
+            const fileInput = document.getElementById("file-input");
+            if (fileInput) {
+                fileInput.addEventListener("change", manejarImportacionArchivo);
+            }
+
+            const langSelect = document.getElementById("lang-select");
+            if (langSelect) {
+                langSelect.addEventListener("change", function () {
+                    mostrarNotificacion(`Idioma cambiado a: ${this.options[this.selectedIndex].text}`, 'success');
+                });
+            }
+
+            // Configurar navegación
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const page = link.getAttribute('data-page');
+                    mostrarNotificacion(`Cargando módulo: ${link.textContent}`, 'info');
+                });
+            });
+
+            // Configurar overlay
+            setupOverlay();
+
+            // Enfocar el input después de un tiempo
+            setTimeout(() => {
+                if (messageInput) {
+                    messageInput.focus();
+                }
+            }, 1000);
+        });
+
+        // === FUNCIONES EXPUESTAS PARA C# ===
+        window.recibirRespuestaDesdeCSharp = function (respuesta) {
+            ocultarCargando();
+            addMessage("bot", String(respuesta));
+        };
+
+        window.mostrarCargando = mostrarCargando;
+        window.ocultarCargando = ocultarCargando;
+        window.limpiarChat = limpiarChat;
+        window.nuevaConversacion = crearNuevoChat;
+    </script>
+</body>
+</html>
