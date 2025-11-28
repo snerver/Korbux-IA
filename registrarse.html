@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Registrarse · KORBUX IA</title>
+    <link rel="icon" href="assets/img/logo.png" type="image/png" />
+    <script src="https://cdn.jsdelivr.net/npm/lokijs@1.5.9/build/lokijs.min.js"></script>
+    <style>
+      :root {
+        --primary-color: #6c8efb;
+        --primary-dark: #4a6edb;
+        --background-color: #fdfdfd;
+        --text-color: #2e3a59;
+        --surface-color: #ffffff;
+        --border-color: #dcdcdc;
+        --gray-text: #7b8ca1;
+      }
+      .dark {
+        --primary-color: #a3bffa;
+        --background-color: #1c1c1c;
+        --text-color: #d1d5db;
+        --surface-color: #273549;
+        --border-color: #3e4a6b;
+        --gray-text: #a0aec0;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Courier New", Courier, monospace;
+        color: var(--text-color);
+        background-color: var(--background-color);
+        transition: color 0.3s ease, background-color 0.3s ease;
+        min-height: 100vh;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+      }
+      .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 250px;
+        height: 100vh;
+        background-color: var(--surface-color);
+        border-right: 1px solid var(--border-color);
+        padding: 1rem;
+        overflow-y: auto;
+        z-index: 1000;
+      }
+      .navbar .brand {
+        display: block;
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+        text-decoration: none;
+      }
+      .nav-links {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        margin-bottom: 2rem;
+      }
+      .nav-links a {
+        text-decoration: none;
+        color: var(--text-color);
+        padding: 0.5rem;
+        border-radius: 0.375rem;
+        font-weight: 500;
+      }
+      .nav-controls {
+        border-top: 1px solid var(--border-color);
+        padding-top: 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      #lang-select {
+        padding: 0.5rem;
+        border-radius: 0.375rem;
+        border: 1px solid var(--border-color);
+        background-color: var(--surface-color);
+        color: var(--text-color);
+        font-family: inherit;
+      }
+      #toggle-theme {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: var(--primary-color);
+      }
+      main {
+        margin-left: 250px;
+        padding: 2rem;
+      }
+      .form-section {
+        max-width: 600px;
+        margin: auto;
+      }
+      input[type="text"],
+      input[type="password"] {
+        width: 100%;
+        padding: 0.75rem;
+        margin-bottom: 1rem;
+        border: 1px solid var(--border-color);
+        border-radius: 0.375rem;
+        font-family: inherit;
+        font-size: 1rem;
+        background-color: var(--surface-color);
+        color: var(--text-color);
+      }
+      .checkbox-container {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+      }
+      .checkbox-container input[type="checkbox"] {
+        width: 1rem;
+        height: 1rem;
+        margin-right: 0.5rem;
+        border-radius: 50%;
+        accent-color: var(--primary-color);
+      }
+      #password-strength {
+        height: 8px;
+        width: 100%;
+        background-color: var(--border-color);
+        border-radius: 4px;
+        margin-bottom: 1rem;
+        overflow: hidden;
+      }
+      #strength-bar {
+        height: 100%;
+        width: 0%;
+        transition: width 0.3s ease;
+      }
+      button {
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 0.375rem;
+        cursor: pointer;
+      }
+      #registro-log {
+        margin-top: 1rem;
+        font-size: 0.9rem;
+        color: var(--gray-text);
+      }
+    </style>
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <a class="brand" href="#">Korbux</a>
+      <div class="nav-links">
+        <a href="okuota.html">Okuota</a>
+        <a href="monet.html">Monet</a>
+        <a href="ditters.html">Ditters</a>
+        <a href="jean.html">Jean</a>
+        <a href="lovelace.html">Lovelace</a>
+        <a href="santaolalla.html">Santa Olalla</a>
+        <a href="perfil.html">Perfil</a>
+        <a href="historial.html">Historial</a>
+        <a href="registrarse.html">Registro</a>
+      </div>
+      <div class="nav-controls">
+        <select id="lang-select">
+          <option value="es" selected>Español</option>
+          <option value="en">Inglés</option>
+          <option value="fr">Francés</option>
+          <option value="de">Alemán</option>
+          <option value="af">Africano</option>
+        </select>
+        <button id="toggle-theme">🌙</button>
+      </div>
+    </nav>
+
+    <main>
+      <section class="form-section">
+        <h2>📝 Registro de agente o usuario</h2>
+        <form id="registro-form" autocomplete="off">
+          <input
+            type="text"
+            id="nombre"
+            placeholder="Nombre completo"
+            required
+          />
+          <input type="password" id="clave" placeholder="Contraseña" required />
+          <div id="password-strength"><div id="strength-bar"></div></div>
+          <input
+            type="password"
+            id="verificar"
+            placeholder="Confirmar contraseña"
+            required
+          />
+          <div class="checkbox-container">
+            <input type="checkbox" id="terminos" required />
+            <label for="terminos"
+              >Leí y acepto los términos y condiciones</label
+            >
+          </div>
+          <button type="submit">Registrar</button>
+        </form>
+        <div id="registro-log"></div>
+      </section>
+    </main>
+
+    <script>
+      const db = new loki("korbux.json", {
+        autoload: true,
+        autosave: true,
+        autosaveInterval: 5000,
+        autoloadCallback: () => {
+          if (!db.getCollection("usuarios")) {
+            db.addCollection("usuarios", { unique: ["nombre"] });
+          }
+          if (!db.getCollection("auditoria")) {
+            db.addCollection("auditoria");
+          }
+        },
+      });
+
+      document.getElementById("clave").addEventListener("input", function () {
+        const clave = this.value;
+        const bar = document.getElementById("strength-bar");
+
+        let nivel = 0;
+        if (clave.length >= 8) nivel++;
+        if (/\d/.test(clave)) nivel++;
+        if (/[!@#$%^&*()_\-+=<>?{}[\]~]/.test(clave)) nivel++;
+
+        if (nivel === 0) {
+          bar.style.width = "0%";
+          bar.style.backgroundColor = "transparent";
+        } else if (nivel === 1) {
+          bar.style.width = "33%";
+          bar.style.backgroundColor = "#e74c3c";
+        } else if (nivel === 2) {
+          bar.style.width = "66%";
+          bar.style.backgroundColor = "#f1c40f";
+        } else {
+          bar.style.width = "100%";
+          bar.style.backgroundColor = "#2ecc71";
+        }
+      });
+
+      document
+        .getElementById("registro-form")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          const nombre = document.getElementById("nombre").value.trim();
+          const clave = document.getElementById("clave").value.trim();
+          const verificar = document.getElementById("verificar").value.trim();
+          const terminos = document.getElementById("terminos").checked;
+          const log = document.getElementById("registro-log");
+
+          if (!nombre || !clave || !verificar || !terminos) {
+            log.innerHTML = `⚠️ Todos los campos son obligatorios.`;
+            return;
+          }
+
+          if (clave !== verificar) {
+            log.innerHTML = `⚠️ Las contraseñas no coinciden.`;
+            return;
+          }
+
+          const requisitos = {
+            longitud: clave.length >= 8,
+            numero: /\d/.test(clave),
+            simbolo: /[!@#$%^&*()_\-+=<>?{}[\]~]/.test(clave),
+          };
+
+          if (
+            !requisitos.longitud ||
+            !requisitos.numero ||
+            !requisitos.simbolo
+          ) {
+            log.innerHTML = `⚠️ La contraseña debe tener al menos 8 caracteres, un número y un símbolo especial.`;
+            return;
+          }
+
+          const usuarios = db.getCollection("usuarios");
+          const auditoria = db.getCollection("auditoria");
+
+          const existente = usuarios.findOne({ nombre });
+
+          if (existente) {
+            log.innerHTML = `⚠️ El nombre <strong>${nombre}</strong> ya está registrado.`;
+            return;
+          }
+
+          usuarios.insert({
+            nombre,
+            clave,
+            fecha_registro: new Date().toISOString(),
+          });
+
+          auditoria.insert({
+            tipo: "registro",
+            campo: "usuario",
+            nuevo: nombre,
+            fecha: new Date().toISOString(),
+            modulo: "registrarse",
+          });
+
+          log.innerHTML = `✅ Registro exitoso de <strong>${nombre}</strong>.`;
+          document.getElementById("registro-form").reset();
+          document.getElementById("strength-bar").style.width = "0%";
+          document.getElementById("strength-bar").style.backgroundColor =
+            "transparent";
+        });
+
+      document.getElementById("toggle-theme").addEventListener("click", () => {
+        document.documentElement.classList.toggle("dark");
+      });
+    </script>
+  </body>
+</html>

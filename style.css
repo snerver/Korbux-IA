@@ -1,0 +1,366 @@
+/* ===============================
+🌐 VARIABLES GLOBALES Y PALETA BASE
+================================= */
+:root {
+    --primary-color: #6c8efb;
+    --primary-dark: #4a6edb;
+    --primary-light: #a3bffa;
+    --background-color: #545252;
+    --text-color: #000000;
+    --surface-color: #3b3a3a;
+    --border-color: #3b3a3a;
+    --gray-text: #000000;
+}
+
+/* ===============================
+🌙 MODO OSCURO
+================================= */
+.dark {
+    --primary-color: #6c8efb;
+        --primary-dark: #4a6edb;
+        --primary-light: #a3bffa;
+        --background-color: #545252;
+        --text-color: #000000;
+        --surface-color: #3b3a3a;
+        --border-color: #3b3a3a;
+        --gray-text: #000000;
+}
+
+/* ===============================
+🖋️ TIPOGRAFÍA Y CUERPO
+================================= */
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Courier New', Courier, monospace;
+    color: var(--text-color);
+    background-color: var(--background-color);
+    transition: color 0.3s ease, background-color 0.3s ease;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    line-height: 1.6;
+    animation: fadeInBody 0.8s ease-in;
+}
+
+@keyframes fadeInBody {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* ===============================
+📐 LAYOUT PRINCIPAL
+================================= */
+main {
+    flex: 1 0 auto;
+    padding: 1.5rem;
+    margin-left: 250px;
+}
+
+.sidebar {
+    background-color: var(--surface-color);
+    border-right: 1px solid var(--border-color);
+    padding: 1rem;
+}
+
+.sidebar-title {
+    margin-top: 1rem;
+    font-size: 1.2rem;
+    color: var(--text-color);
+}
+
+footer {
+    flex-shrink: 0;
+    background-color: var(--surface-color);
+    padding: 1rem 0;
+    text-align: center;
+    animation: slideUpFooter 0.6s ease-out;
+}
+
+@keyframes slideUpFooter {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* ===============================
+📌 NAVBAR LATERAL IZQUIERDO
+================================= */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    height: 100vh;
+    background-color: var(--surface-color);
+    border-right: 1px solid var(--border-color);
+    padding: 1rem;
+    overflow-y: auto;
+    z-index: 1000;
+    animation: slideInNavbar 0.5s ease-out;
+}
+
+@keyframes slideInNavbar {
+    from {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* ===============================
+📋 LISTA DE CHATS
+================================= */
+#chat-list {
+    max-height: 60vh;
+    overflow-y: auto;
+    animation: fadeInList 0.5s ease-in;
+}
+
+@keyframes fadeInList {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#new-chat-btn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#new-chat-btn:hover {
+    background-color: var(--primary-dark);
+}
+
+/* ===============================
+💬 HISTORIAL DE CHAT
+================================= */
+.chat-section {
+    padding: 1rem;
+}
+
+#chat-history {
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: 0.375rem;
+    padding: 1rem;
+    overflow-y: auto;
+    max-height: 80vh;
+    animation: fadeInChat 0.6s ease-in;
+}
+
+@keyframes fadeInChat {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* ===============================
+📝 FORMULARIO DE MENSAJE
+================================= */
+#chat-form {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+#message-input {
+    width: 100%;
+    min-height: 80px;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 0.375rem;
+    resize: vertical;
+    font-family: inherit;
+    font-size: 1rem;
+    color: var(--text-color);
+    background-color: var(--surface-color);
+}
+
+#send-btn {
+    align-self: flex-end;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#send-btn:hover {
+    background-color: var(--primary-dark);
+}
+
+/* ===============================
+⬇️ BOTÓN DE SCROLL AL FINAL
+================================= */
+#scroll-to-bottom-btn {
+    position: fixed;
+    bottom: 3rem;
+    right: 1rem;
+    z-index: 1050;
+    display: none;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.5rem;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    cursor: pointer;
+    animation: pulseScroll 1.5s infinite;
+}
+
+@keyframes pulseScroll {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
+}
+
+/* ===============================
+🎛️ CONTROLES DE TEMA E IDIOMA
+================================= */
+.nav-controls {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    border-top: 1px solid var(--border-color);
+    padding-top: 1rem;
+}
+
+#lang-select {
+    padding: 0.5rem;
+    border-radius: 0.375rem;
+    border: 1px solid var(--border-color);
+    background-color: var(--surface-color);
+    color: var(--text-color);
+    font-family: inherit;
+}
+
+#toggle-theme {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--primary-color);
+    transition: transform 0.3s ease;
+}
+
+#toggle-theme:hover {
+    transform: rotate(20deg);
+}
+
+/* ===============================
+🎞️ TRANSICIONES SUAVES
+================================= */
+button,
+select,
+textarea,
+.list-group-item {
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* ===============================
+🧭 ESTILO VISUAL DEL NAVBAR
+================================= */
+.navbar .brand {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.navbar .brand:hover {
+    color: var(--primary-dark);
+}
+
+.nav-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--text-color);
+    padding: 0.5rem;
+    border-radius: 0.375rem;
+    font-weight: 500;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.nav-links a:hover {
+    background-color: var(--primary-light);
+    color: var(--primary-dark);
+}
+
+.nav-links a.active {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+/* Modo oscuro adaptado */
+.dark .navbar .brand {
+    color: var(--primary-color);
+}
+
+.dark .nav-links a {
+    color: var(--text-color);
+}
+
+.dark .nav-links a:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+/* ===============================
+📦 FIN DEL CSS
+================================= */

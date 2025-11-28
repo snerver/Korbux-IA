@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Korbux Chat • 100% Offline • Botones Pequeños</title>
+    <style>
+      :root {
+        --p: #6c8efb;
+        --pd: #4a6edb;
+        --bg: #f8f9ff;
+        --s: #fff;
+        --t: #1a1a1a;
+        --b: #e0e0e0;
+      }
+      .dark {
+        --p: #7c9eff;
+        --pd: #5b7bff;
+        --bg: #0d0d12;
+        --s: #1a1a20;
+        --t: #e0e0e0;
+        --b: #333;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Courier New", Courier, monospace;
+        background: var(--bg);
+        color: var(--t);
+        min-height: 100vh;
+        display: flex;
+        transition: all 0.4s;
+      }
+      .app {
+        display: flex;
+        width: 100%;
+        min-height: 100vh;
+      }
+
+      /* NAVBAR DESPLEGABLE */
+      .nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        z-index: 1000;
+        display: flex;
+        flex-direction: column;
+        transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .nav.collapsed {
+        width: 54px;
+      }
+      .nav.expanded {
+        width: 250px;
+        background: var(--s);
+        border-right: 1px solid var(--b);
+        padding: 1.2rem 0.8rem;
+      }
+
+      /* BOTÓN HAMBURGUESA MÁS PEQUEÑO */
+      .hamburger {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 54px;
+        height: 54px;
+        background: var(--s);
+        border: none;
+        border-bottom: 1px solid var(--b);
+        cursor: pointer;
+        font-size: 1.35rem;
+        color: var(--t);
+        transition: all 0.25s;
+      }
+      .hamburger:hover {
+        background: var(--p);
+        color: #fff;
+      }
+      .nav.collapsed .hamburger {
+        border-right: 1px solid var(--b);
+        border-bottom: none;
+      }
+
+      .brand {
+        display: none;
+        font-size: 1.8rem;
+        font-weight: 900;
+        color: var(--p);
+        margin: 1rem 0;
+      }
+      .nav.expanded .brand {
+        display: block;
+      }
+
+      .links {
+        display: none;
+        flex-direction: column;
+        gap: 0.4rem;
+      }
+      .nav.expanded .links {
+        display: flex;
+      }
+      .links a {
+        display: block;
+        padding: 0.65rem 0.9rem;
+        border-radius: 8px;
+        color: var(--t);
+        text-decoration: none;
+        font-size: 0.95rem;
+        transition: 0.25s;
+      }
+      .links a:hover,
+      .links a.active {
+        background: var(--p);
+        color: #fff;
+      }
+
+      .ctrl {
+        display: none;
+        margin-top: auto;
+        padding-top: 1rem;
+        border-top: 1px solid var(--b);
+        gap: 0.5rem;
+      }
+      .nav.expanded .ctrl {
+        display: flex;
+        flex-direction: column;
+      }
+      #lang,
+      #theme {
+        width: 100%;
+        padding: 0.75rem;
+        font-size: 0.9rem;
+        border-radius: 8px;
+        border: 1px solid var(--b);
+        background: var(--s);
+        color: var(--t);
+      }
+      #theme {
+        background: none;
+        border: none;
+        font-size: 1.9rem;
+        cursor: pointer;
+        padding: 0;
+      }
+
+      .side {
+        width: 280px;
+        background: var(--s);
+        border-right: 1px solid var(--b);
+        padding: 1.8rem 1.3rem;
+        transition: all 0.3s;
+        margin-left: 54px;
+      }
+      .nav.expanded ~ .side {
+        margin-left: 250px;
+      }
+
+      /* BOTÓN NUEVO CHAT MÁS PEQUEÑO */
+      #new-chat {
+        width: 100%;
+        padding: 0.85rem;
+        background: var(--p);
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        font-weight: bold;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: 0.25s;
+      }
+      #new-chat:hover {
+        background: var(--pd);
+      }
+
+      .stitle {
+        margin: 1.8rem 0 1rem;
+        font-size: 1.25rem;
+      }
+      #chats {
+        list-style: none;
+      }
+      #chats li {
+        padding: 0.9rem;
+        border-radius: 10px;
+        background: var(--bg);
+        margin-bottom: 0.7rem;
+        cursor: pointer;
+        transition: 0.25s;
+        position: relative;
+        font-size: 0.95rem;
+      }
+      #chats li:hover,
+      #chats li.active {
+        background: var(--p);
+        color: #fff;
+      }
+      #chats li.active::after {
+        content: "•";
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 1.3rem;
+        animation: p 2s infinite;
+      }
+      @keyframes p {
+        0%,
+        100% {
+          opacity: 0.6;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+
+      .chat {
+        flex: 1;
+        padding: 1.8rem;
+        display: flex;
+        flex-direction: column;
+      }
+      #history {
+        flex: 1;
+        background: var(--s);
+        border: 1px solid var(--b);
+        border-radius: 12px;
+        padding: 1.4rem;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 1.1rem;
+        max-height: calc(100vh-180px);
+      }
+      .msg {
+        max-width: 78%;
+        padding: 1rem 1.3rem;
+        border-radius: 18px;
+        line-height: 1.5;
+        font-size: 0.98rem;
+        animation: f 0.35s;
+      }
+      @keyframes f {
+        from {
+          opacity: 0;
+          transform: translateY(8px);
+        }
+      }
+      .u {
+        background: var(--p);
+        color: #fff;
+        align-self: flex-end;
+        border-bottom-right-radius: 4px;
+      }
+      .b {
+        background: var(--bg);
+        color: var(--t);
+        border: 1px solid var(--b);
+        align-self: flex-start;
+        border-bottom-left-radius: 4px;
+      }
+      #form {
+        margin-top: 1.4rem;
+        display: flex;
+        gap: 0.9rem;
+      }
+      #input {
+        flex: 1;
+        padding: 1rem 1.2rem;
+        border: 1px solid var(--b);
+        border-radius: 26px;
+        background: var(--s);
+        color: var(--t);
+        font-family: inherit;
+        font-size: 1rem;
+        resize: none;
+        min-height: 54px;
+      }
+
+      /* BOTÓN ENVIAR MÁS PEQUEÑO Y ELEGANTE */
+      #send {
+        padding: 0 1.6rem;
+        background: var(--p);
+        color: #fff;
+        border: none;
+        border-radius: 26px;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 0.9rem;
+        transition: 0.25s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 80px;
+      }
+      #send:hover {
+        background: var(--pd);
+      }
+
+      #down {
+        position: fixed;
+        bottom: 90px;
+        right: 24px;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: var(--p);
+        color: #fff;
+        border: none;
+        font-size: 1.8rem;
+        cursor: pointer;
+        display: none;
+        z-index: 1000;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <nav class="nav expanded" id="navbar">
+        <button class="hamburger" id="toggle-nav">Menu</button>
+        <a class="brand" data-t="brand">Korbux</a>
+        <div class="links">
+          <a data-t="okuota">Okuota</a>
+          <a data-t="monet">Monet</a>
+          <a data-t="ditters">Ditters</a>
+          <a data-t="jean">Jean</a>
+          <a data-t="lovelace">Lovelace</a>
+          <a data-t="santa">Santa Olalla</a>
+          <a data-t="profile">Perfil</a>
+          <a data-t="history">Historial</a>
+        </div>
+        <div class="ctrl">
+          <select id="lang">
+            <option value="es">Español</option>
+            <option value="en">English</option>
+            <option value="fr">Français</option>
+            <option value="de">Deutsch</option>
+            <option value="it">Italiano</option>
+            <option value="pt">Português</option>
+          </select>
+          <button id="theme" data-t="theme">Dark Mode</button>
+        </div>
+      </nav>
+
+      <aside class="side">
+        <button id="new-chat" data-t="new">+ Nuevo Chat</button>
+        <h2 class="stitle" data-t="recent">Chats recientes</h2>
+        <ul id="chats"></ul>
+      </aside>
+
+      <section class="chat">
+        <div id="history"></div>
+        <form id="form">
+          <textarea
+            id="input"
+            data-t-placeholder="ph"
+            placeholder="Escribe tu mensaje aquí..."
+          ></textarea>
+          <button id="send" type="submit" data-t="send">Enviar</button>
+        </form>
+      </section>
+    </div>
+
+    <button id="down">Down Arrow</button>
+
+    <script>
+      // === TRADUCCIONES + RESPUESTAS POR IDIOMA ===
+      const textos = {
+        es: {
+          brand: "Korbux",
+          okuota: "Okuota",
+          monet: "Monet",
+          ditters: "Ditters",
+          jean: "Jean",
+          lovelace: "Lovelace",
+          santa: "Santa Olalla",
+          profile: "Perfil",
+          history: "Historial",
+          new: "+ Nuevo Chat",
+          recent: "Chats recientes",
+          welcome:
+            "¡Hola! Soy Korbux, tu asistente IA 100% offline.\nTodo funciona sin internet. ¿En qué te ayudo hoy?",
+          ph: "Escribe tu mensaje aquí...",
+          send: "Enviar",
+          theme: "Dark Mode",
+          themeDark: "Light Mode",
+          newChatTitle: "Nuevo chat",
+          responses: [
+            "¡Entendido! Todo funciona localmente.",
+            "Perfecto, te ayudo sin conexión.",
+            "¡Buena pregunta!",
+            "Claro, puedo ayudarte 100% sin internet.",
+            "Interesante. Todo procesado aquí.",
+            "¡Genial! Aquí tienes opciones.",
+            "Listo. Respuesta instantánea.",
+          ],
+        },
+        en: {
+          brand: "Korbux",
+          profile: "Profile",
+          history: "History",
+          new: "+ New Chat",
+          recent: "Recent Chats",
+          welcome:
+            "Hi! I'm Korbux, your 100% offline AI assistant.\nHow can I help you today?",
+          ph: "Type your message here...",
+          send: "Send",
+          theme: "Light Mode",
+          themeDark: "Dark Mode",
+          newChatTitle: "New chat",
+          responses: [
+            "Got it!",
+            "Perfect, works offline.",
+            "Great question!",
+            "Sure, no internet needed.",
+            "Interesting.",
+            "Awesome! Here are options.",
+            "Done instantly.",
+          ],
+        },
+        fr: {
+          brand: "Korbux",
+          profile: "Profil",
+          history: "Historique",
+          new: "+ Nouveau Chat",
+          recent: "Chats récents",
+          welcome:
+            "Salut ! Je suis Korbux, ton assistant IA 100% hors ligne.\nComment puis-je t'aider ?",
+          ph: "Écris ton message ici...",
+          send: "Envoyer",
+          theme: "Mode clair",
+          themeDark: "Mode sombre",
+          newChatTitle: "Nouveau chat",
+          responses: [
+            "Compris !",
+            "Parfait, hors ligne.",
+            "Bonne question !",
+            "Bien sûr, sans internet.",
+            "Intéressant.",
+            "Super ! Voici des options.",
+            "Terminé instantanément.",
+          ],
+        },
+        de: {
+          brand: "Korbux",
+          profile: "Profil",
+          history: "Verlauf",
+          new: "+ Neuer Chat",
+          recent: "Letzte Chats",
+          welcome:
+            "Hallo! Ich bin Korbux, dein 100% offline KI-Assistent.\nWomit kann ich helfen?",
+          ph: "Schreibe deine Nachricht hier...",
+          send: "Senden",
+          theme: "Heller Modus",
+          themeDark: "Dunkler Modus",
+          newChatTitle: "Neuer Chat",
+          responses: [
+            "Verstanden!",
+            "Perfekt, offline.",
+            "Gute Frage!",
+            "Klar, ohne Internet.",
+            "Interessant.",
+            "Toll! Hier Optionen.",
+            "Fertig, sofort.",
+          ],
+        },
+        it: {
+          brand: "Korbux",
+          profile: "Profilo",
+          history: "Cronologia",
+          new: "+ Nuova Chat",
+          recent: "Chat recenti",
+          welcome:
+            "Ciao! Sono Korbux, il tuo assistente IA 100% offline.\nCome posso aiutarti?",
+          ph: "Scrivi il tuo messaggio qui...",
+          send: "Invia",
+          theme: "Modalità chiara",
+          themeDark: "Modalità scura",
+          newChatTitle: "Nuova chat",
+          responses: [
+            "Capito!",
+            "Perfetto, offline.",
+            "Ottima domanda!",
+            "Certo, senza internet.",
+            "Interessante.",
+            "Fantastico! Ecco opzioni.",
+            "Fatto all'istante.",
+          ],
+        },
+        pt: {
+          brand: "Korbux",
+          profile: "Perfil",
+          history: "Histórico",
+          new: "+ Novo Chat",
+          recent: "Chats recentes",
+          welcome:
+            "Olá! Sou Korbux, seu assistente IA 100% offline.\nComo posso ajudar?",
+          ph: "Escreva sua mensagem aqui...",
+          send: "Enviar",
+          theme: "Modo claro",
+          themeDark: "Modo escuro",
+          newChatTitle: "Novo chat",
+          responses: [
+            "Entendido!",
+            "Perfeito, offline.",
+            "Boa pergunta!",
+            "Claro, sem internet.",
+            "Interessante.",
+            "Ótimo! Aqui opções.",
+            "Pronto, instantâneo.",
+          ],
+        },
+      };
+
+      // === CHATS + NAVBAR DESPLEGABLE ===
+      let chats = [
+        {
+          id: 1,
+          titles: {
+            es: "Plan de proyecto",
+            en: "Project Plan",
+            fr: "Plan de projet",
+            de: "Projektplan",
+            it: "Piano progetto",
+            pt: "Plano do projeto",
+          },
+          messages: [],
+        },
+        {
+          id: 2,
+          titles: {
+            es: "Estrategias de marketing",
+            en: "Marketing Strategies",
+            fr: "Stratégies marketing",
+            de: "Marketingstrategien",
+            it: "Strategie marketing",
+            pt: "Estratégias de marketing",
+          },
+          messages: [],
+        },
+        {
+          id: 3,
+          titles: {
+            es: "Ideas para video",
+            en: "Video Ideas",
+            fr: "Idées vidéo",
+            de: "Video-Ideen",
+            it: "Idee per video",
+            pt: "Ideias para vídeo",
+          },
+          messages: [],
+        },
+      ];
+      let currentChatId = 2,
+        nextId = 4,
+        currentLang = "es";
+
+      const history = document.getElementById("history");
+      const chatList = document.getElementById("chats");
+      const input = document.getElementById("input");
+      const form = document.getElementById("form");
+      const langSelect = document.getElementById("lang");
+      const navbar = document.getElementById("navbar");
+      const toggleNav = document.getElementById("toggle-nav");
+
+      // NAVBAR DESPLEGABLE
+      toggleNav.onclick = () => {
+        navbar.classList.toggle("collapsed");
+        navbar.classList.toggle("expanded");
+        toggleNav.textContent = navbar.classList.contains("collapsed")
+          ? "Menu"
+          : "Close";
+      };
+
+      // TRADUCIR
+      function traducir(lang) {
+        currentLang = lang;
+        const t = textos[lang];
+        document.querySelectorAll("[data-t]").forEach((el) => {
+          const k = el.getAttribute("data-t");
+          if (t[k]) el.textContent = t[k];
+        });
+        input.placeholder = t.ph;
+        const isDark = document.documentElement.classList.contains("dark");
+        document.getElementById("theme").textContent = isDark
+          ? t.themeDark
+          : t.theme;
+        renderChats();
+        if (currentChatId) switchChat(currentChatId);
+      }
+
+      function renderChats() {
+        chatList.innerHTML = "";
+        chats.forEach((c) => {
+          const li = document.createElement("li");
+          li.textContent = c.titles[currentLang] || c.titles.es;
+          li.dataset.id = c.id;
+          if (c.id === currentChatId) li.classList.add("active");
+          li.onclick = () => switchChat(c.id);
+          chatList.appendChild(li);
+        });
+      }
+
+      function switchChat(id) {
+        currentChatId = id;
+        const chat = chats.find((c) => c.id === id);
+        history.innerHTML = "";
+        const t = textos[currentLang];
+        if (chat.messages.length === 0) {
+          const w = document.createElement("div");
+          w.className = "msg b";
+          w.innerHTML = `<strong>Korbux:</strong> ${t.welcome.replace(
+            /\n/g,
+            "<br>"
+          )}`;
+          history.appendChild(w);
+        } else {
+          chat.messages.forEach((m) => {
+            const d = document.createElement("div");
+            d.className = `msg ${m.type === "u" ? "u" : "b"}`;
+            d.innerHTML =
+              m.type === "u" ? m.text : `<strong>Korbux:</strong> ${m.text}`;
+            history.appendChild(d);
+          });
+        }
+        renderChats();
+        history.scrollTop = history.scrollHeight;
+      }
+
+      document.getElementById("new-chat").onclick = () => {
+        const t = textos[currentLang];
+        const nuevo = {
+          id: nextId++,
+          titles: Object.fromEntries(
+            Object.keys(textos).map((l) => [
+              l,
+              `${t.newChatTitle} ${nextId - 1}`,
+            ])
+          ),
+          messages: [],
+        };
+        chats.push(nuevo);
+        switchChat(nuevo.id);
+      };
+
+      form.onsubmit = (e) => {
+        e.preventDefault();
+        const txt = input.value.trim();
+        if (!txt) return;
+        const chat = chats.find((c) => c.id === currentChatId);
+        chat.messages.push({ type: "u", text: txt });
+        const resp =
+          textos[currentLang].responses[
+            Math.floor(Math.random() * textos[currentLang].responses.length)
+          ];
+        chat.messages.push({ type: "b", text: resp });
+        input.value = "";
+        switchChat(currentChatId);
+      };
+
+      langSelect.onchange = () => traducir(langSelect.value);
+      document.getElementById("theme").onclick = () => {
+        document.documentElement.classList.toggle("dark");
+        const dark = document.documentElement.classList.contains("dark");
+        document.getElementById("theme").textContent = dark
+          ? textos[currentLang].themeDark
+          : textos[currentLang].theme;
+      };
+
+      history.onscroll = () => {
+        const cerca =
+          history.scrollHeight - history.scrollTop <=
+          history.clientHeight + 150;
+        document.getElementById("down").style.display = cerca
+          ? "none"
+          : "block";
+      };
+      document.getElementById("down").onclick = () =>
+        (history.scrollTop = history.scrollHeight);
+
+      // INICIAR
+      traducir("es");
+      switchChat(currentChatId);
+    </script>
+  </body>
+</html>

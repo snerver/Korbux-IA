@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Historial de conversaciones de chat con Korbux AI"
+    />
+    <title>Historial de Chat | Korbux AI</title>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      /* ===============================
+🌐 VARIABLES GLOBALES Y PALETA BASE
+================================= */
+      :root {
+        --primary-color: #6c8efb;
+        --primary-dark: #4a6edb;
+        --background-color: #fdfdfd;
+        --text-color: #2e3a59;
+        --surface-color: #ffffff;
+        --border-color: #dcdcdc;
+        --gray-text: #7b8ca1;
+      }
+
+      /* ===============================
+🌙 MODO OSCURO
+================================= */
+      .dark {
+        --primary-color: #a3bffa;
+        --background-color: #1c1c1c;
+        --text-color: #d1d5db;
+        --surface-color: #273549;
+        --border-color: #3e4a6b;
+        --gray-text: #a0aec0;
+      }
+
+      /* ===============================
+🖋️ TIPOGRAFÍA Y CUERPO
+================================= */
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: "Courier New", Courier, monospace;
+        color: var(--text-color);
+        background-color: var(--background-color);
+        transition: color 0.3s ease, background-color 0.3s ease;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        line-height: 1.6;
+        animation: fadeInBody 0.8s ease-in;
+      }
+
+      @keyframes fadeInBody {
+        from {
+          opacity: 0;
+        }
+
+        to {
+          opacity: 1;
+        }
+      }
+
+      /* ===============================
+📐 LAYOUT PRINCIPAL
+================================= */
+      main {
+        flex: 1 0 auto;
+        padding: 1.5rem;
+        margin-left: 250px;
+      }
+
+      .sidebar {
+        background-color: var(--surface-color);
+        border-right: 1px solid var(--border-color);
+        padding: 1rem;
+      }
+
+      .sidebar-title {
+        margin-top: 1rem;
+        font-size: 1.2rem;
+        color: var(--text-color);
+      }
+
+      footer {
+        flex-shrink: 0;
+        background-color: var(--surface-color);
+        padding: 1rem 0;
+        text-align: center;
+        animation: slideUpFooter 0.6s ease-out;
+      }
+
+      @keyframes slideUpFooter {
+        from {
+          transform: translateY(20px);
+          opacity: 0;
+        }
+
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      /* ===============================
+📌 NAVBAR LATERAL IZQUIERDO
+================================= */
+      .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 250px;
+        height: 100vh;
+        background-color: var(--surface-color);
+        border-right: 1px solid var(--border-color);
+        padding: 1rem;
+        overflow-y: auto;
+        z-index: 1000;
+        animation: slideInNavbar 0.5s ease-out;
+      }
+
+      @keyframes slideInNavbar {
+        from {
+          transform: translateX(-100%);
+          opacity: 0;
+        }
+
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+
+      /* ===============================
+📋 LISTA DE CHATS
+================================= */
+      #chat-list {
+        max-height: 60vh;
+        overflow-y: auto;
+        animation: fadeInList 0.5s ease-in;
+      }
+
+      @keyframes fadeInList {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      #new-chat-btn {
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 0.375rem;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      #new-chat-btn:hover {
+        background-color: var(--primary-dark);
+      }
+
+      /* ===============================
+💬 HISTORIAL DE CHAT
+================================= */
+      .chat-section {
+        padding: 1rem;
+      }
+
+      #chat-history {
+        background-color: var(--surface-color);
+        border: 1px solid var(--border-color);
+        border-radius: 0.375rem;
+        padding: 1rem;
+        overflow-y: auto;
+        max-height: 80vh;
+        animation: fadeInChat 0.6s ease-in;
+      }
+
+      @keyframes fadeInChat {
+        from {
+          opacity: 0;
+        }
+
+        to {
+          opacity: 1;
+        }
+      }
+
+      /* ===============================
+📝 FORMULARIO DE MENSAJE
+================================= */
+      #chat-form {
+        margin-top: 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      #message-input {
+        width: 100%;
+        min-height: 80px;
+        padding: 0.75rem;
+        border: 1px solid var(--border-color);
+        border-radius: 0.375rem;
+        resize: vertical;
+        font-family: inherit;
+        font-size: 1rem;
+        color: var(--text-color);
+        background-color: var(--surface-color);
+      }
+
+      #send-btn {
+        align-self: flex-end;
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 0.375rem;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      #send-btn:hover {
+        background-color: var(--primary-dark);
+      }
+
+      /* ===============================
+⬇️ BOTÓN DE SCROLL AL FINAL
+================================= */
+      #scroll-to-bottom-btn {
+        position: fixed;
+        bottom: 3rem;
+        right: 1rem;
+        z-index: 1050;
+        display: none;
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 0.5rem;
+        border-radius: 50%;
+        font-size: 1.5rem;
+        cursor: pointer;
+        animation: pulseScroll 1.5s infinite;
+      }
+
+      @keyframes pulseScroll {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+
+        50% {
+          transform: scale(1.2);
+        }
+      }
+
+      /* ===============================
+🎛️ CONTROLES DE TEMA E IDIOMA
+================================= */
+      .nav-controls {
+        margin-top: 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      #lang-select {
+        padding: 0.5rem;
+        border-radius: 0.375rem;
+        border: 1px solid var(--border-color);
+        background-color: var(--surface-color);
+        color: var(--text-color);
+        font-family: inherit;
+      }
+
+      #toggle-theme {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: var(--primary-color);
+        transition: transform 0.3s ease;
+      }
+
+      #toggle-theme:hover {
+        transform: rotate(20deg);
+      }
+
+      /* ===============================
+🎞️ TRANSICIONES SUAVES
+================================= */
+      button,
+      select,
+      textarea,
+      .list-group-item {
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+
+      /* ===============================
+🧭 ESTILO VISUAL DEL NAVBAR
+================================= */
+      .navbar .brand {
+        display: block;
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+        text-decoration: none;
+        transition: color 0.3s ease;
+      }
+
+      .navbar .brand:hover {
+        color: var(--primary-dark);
+      }
+
+      .nav-links {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .nav-links a {
+        text-decoration: none;
+        color: var(--text-color);
+        padding: 0.5rem;
+        border-radius: 0.375rem;
+        font-weight: 500;
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+
+      .nav-links a:hover {
+        background-color: var(--primary-light);
+        color: var(--primary-dark);
+      }
+
+      .nav-links a.active {
+        background-color: var(--primary-color);
+        color: white;
+      }
+
+      /* Separador visual entre secciones */
+      .nav-controls {
+        border-top: 1px solid var(--border-color);
+        padding-top: 1rem;
+      }
+
+      /* Modo oscuro adaptado */
+      .dark .navbar .brand {
+        color: var(--primary-color);
+      }
+
+      .dark .nav-links a {
+        color: var(--text-color);
+      }
+
+      .dark .nav-links a:hover {
+        background-color: var(--primary-color);
+        color: white;
+      }
+
+      /* ===============================
+📦 FIN DEL CSS
+================================= */
+    </style>
+  </head>
+  <body class="theme-blue light">
+    <header
+      class="bg-primary text-white p-4 shadow-lg flex justify-between items-center px-6"
+      role="banner"
+    >
+      <div class="flex items-center">
+        <a
+          href="#"
+          class="text-3xl font-extrabold tracking-tight"
+          aria-label="Korbux Chat - Volver al inicio"
+          >Korbux</a
+        >
+      </div>
+      <nav
+        class="hidden md:block"
+        aria-label="Navegación principal de la aplicación"
+      >
+        <ul class="flex space-x-6">
+          <li>
+            <a
+              href="index.html"
+              class="text-lg font-medium hover:text-blue-200 transition-colors duration-200"
+              >Inicio</a
+            >
+          </li>
+          <li>
+            <a
+              href="iniciar_sesion.html"
+              class="text-lg font-medium hover:text-blue-200 transition-colors duration-200"
+              >Iniciar Sesión</a
+            >
+          </li>
+          <li>
+            <a
+              href="contacto.html"
+              class="text-lg font-medium hover:text-blue-200 transition-colors duration-200"
+              >Contacto</a
+            >
+          </li>
+          <li>
+            <a
+              href="perfil.html"
+              class="text-lg font-medium hover:text-blue-200 transition-colors duration-200"
+              >Cuenta</a
+            >
+          </li>
+          <li>
+            <a
+              href="historial.html"
+              aria-current="page"
+              class="text-lg font-medium hover:text-blue-200 transition-colors duration-200"
+              >Historial</a
+            >
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <main
+      class="flex-1 flex flex-col items-center justify-center p-4 sm:p-6"
+      role="main"
+    >
+      <!-- Theme Switcher -->
+      <section
+        class="mb-8 p-4 bg-surface rounded-xl shadow-lg w-full max-w-xl text-center flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0"
+      >
+        <div class="flex items-center space-x-4">
+          <span class="text-sm font-medium text-gray">Modo:</span>
+          <button
+            id="light-mode-btn"
+            class="p-2 rounded-lg border border-base shadow-sm bg-primary text-white"
+          >
+            ☀️ Claro
+          </button>
+          <button
+            id="dark-mode-btn"
+            class="p-2 rounded-lg border border-base shadow-sm bg-surface text-color"
+          >
+            🌙 Oscuro
+          </button>
+        </div>
+        <div class="flex items-center space-x-4">
+          <span class="text-sm font-medium text-gray">Paleta:</span>
+          <button
+            id="blue-theme-btn"
+            class="w-8 h-8 rounded-full border border-base ring-2 ring-primary bg-[#3b82f6]"
+            aria-label="Tema Azul"
+          ></button>
+          <button
+            id="purple-theme-btn"
+            class="w-8 h-8 rounded-full border border-base bg-[#8b5cf6]"
+            aria-label="Tema Púrpura"
+          ></button>
+          <button
+            id="green-theme-btn"
+            class="w-8 h-8 rounded-full border border-base bg-[#22c55e]"
+            aria-label="Tema Verde"
+          ></button>
+        </div>
+      </section>
+      <!-- End Theme Switcher -->
+
+      <section class="text-center mb-8">
+        <h1 class="text-5xl font-extrabold text-color mb-2">
+          Historial de Chat
+        </h1>
+        <p class="text-lg text-gray">
+          Revisa tus conversaciones pasadas con Korbux AI
+        </p>
+        <p id="user-id-display" class="text-sm text-gray mt-2">
+          ID de Usuario: Cargando...
+        </p>
+      </section>
+
+      <section
+        class="bg-surface rounded-xl shadow-lg w-full max-w-md md:max-w-lg lg:max-w-xl h-[60vh] overflow-y-auto p-4 space-y-4 border border-base chat-history-scroll"
+        id="historial-conversaciones"
+        role="log"
+        aria-live="polite"
+        aria-atomic="false"
+        aria-label="Ventana de historial de conversaciones con Korbux"
+        tabindex="0"
+      >
+        <!-- Chat history messages will be dynamically loaded here -->
+        <div id="no-history-message" class="text-center text-gray hidden">
+          <p class="text-lg font-medium mb-2">
+            ¡No hay conversaciones aquí todavía!
+          </p>
+          <p class="text-sm">
+            Tu historial de chat aparecerá aquí una vez que empieces a
+            interactuar con Korbux AI.
+          </p>
+        </div>
+      </section>
+
+      <!-- Loading and Error Messages -->
+      <div
+        id="status-messages"
+        class="p-4 bg-surface border-t border-base w-full max-w-md md:max-w-lg lg:max-w-xl rounded-b-xl shadow-inner mt-4"
+      >
+        <p
+          id="loading-message"
+          class="text-primary text-sm text-center hidden"
+          aria-live="polite"
+        >
+          Cargando historial...
+        </p>
+        <p
+          id="error-message"
+          class="text-red-500 text-sm text-center hidden"
+          role="alert"
+          aria-live="assertive"
+        ></p>
+      </div>
+
+      <!-- Clear History Button -->
+      <div
+        class="mt-4 w-full max-w-md md:max-w-lg lg:max-w-xl flex justify-center"
+      >
+        <button
+          id="clear-history-btn"
+          class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-red-600 text-white font-semibold rounded-lg shadow-md hover:bg-red-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          Limpiar Historial
+        </button>
+      </div>
+    </main>
+
+    <footer
+      class="bg-surface text-gray text-center p-4 text-sm mt-8 border-t border-base"
+      role="contentinfo"
+    >
+      <p class="copyright">
+        &copy; <span id="current-year"></span> Korbux. Todos los derechos
+        reservados.
+        <a href="/privacy.html" class="text-primary hover:underline"
+          >Política de Privacidad</a
+        >
+      </p>
+    </footer>
+
+    <script type="module">
+      // API Endpoints (adjust if your backend routes are different)
+      const API_BASE_URL = window.location.origin + "/api";
+
+      // DOM Elements
+      const historialConversacionesDiv = document.getElementById(
+        "historial-conversaciones"
+      );
+      const loadingMessage = document.getElementById("loading-message");
+      const errorMessage = document.getElementById("error-message");
+      const userIdDisplay = document.getElementById("user-id-display");
+      const noHistoryMessage = document.getElementById("no-history-message");
+      const clearHistoryBtn = document.getElementById("clear-history-btn");
+
+      // Theme buttons
+      const lightModeBtn = document.getElementById("light-mode-btn");
+      const darkModeBtn = document.getElementById("dark-mode-btn");
+      const blueThemeBtn = document.getElementById("blue-theme-btn");
+      const purpleThemeBtn = document.getElementById("purple-theme-btn");
+      const greenThemeBtn = document.getElementById("green-theme-btn");
+
+      let currentUserId = null; // Will store the user's unique ID
+      let lastDisplayedDate = null; // To group messages by date
+
+      // Función para aplicar el tema y guardar la configuración
+      function applyTheme(theme, color) {
+        const body = document.body;
+        body.className = "";
+        body.classList.add(`theme-${color}`, theme);
+        // Actualizar los estados visuales de los botones
+        lightModeBtn.classList.toggle("bg-primary", theme === "light");
+        lightModeBtn.classList.toggle("text-white", theme === "light");
+        lightModeBtn.classList.toggle("bg-surface", theme === "dark");
+        lightModeBtn.classList.toggle("text-color", theme === "dark");
+
+        darkModeBtn.classList.toggle("bg-primary", theme === "dark");
+        darkModeBtn.classList.toggle("text-white", theme === "dark");
+        darkModeBtn.classList.toggle("bg-surface", theme === "light");
+        darkModeBtn.classList.toggle("text-color", theme === "light");
+
+        blueThemeBtn.classList.toggle("ring-2", color === "blue");
+        blueThemeBtn.classList.toggle("ring-primary", color === "blue");
+        purpleThemeBtn.classList.toggle("ring-2", color === "purple");
+        purpleThemeBtn.classList.toggle("ring-primary", color === "purple");
+        greenThemeBtn.classList.toggle("ring-2", color === "green");
+        greenThemeBtn.classList.toggle("ring-primary", color === "green");
+
+        localStorage.setItem("theme", theme);
+        localStorage.setItem("color", color);
+      }
+
+      /**
+       * Initializes the chat history page.
+       * Sets up user ID and loads history.
+       */
+      document.addEventListener("DOMContentLoaded", initHistoryPage);
+
+      async function initHistoryPage() {
+        // Basic check for essential DOM elements
+        if (
+          !historialConversacionesDiv ||
+          !loadingMessage ||
+          !errorMessage ||
+          !userIdDisplay ||
+          !noHistoryMessage ||
+          !clearHistoryBtn
+        ) {
+          console.error(
+            "⚠️ One or more essential DOM elements not found. Please check HTML structure."
+          );
+          showError(
+            "Error de inicialización: Faltan elementos de la interfaz."
+          );
+          return;
+        }
+
+        // Cargar el tema guardado o usar el predeterminado
+        const savedTheme = localStorage.getItem("theme") || "light";
+        const savedColor = localStorage.getItem("color") || "blue";
+        applyTheme(savedTheme, savedColor);
+
+        currentUserId = getOrCreateUserId();
+        userIdDisplay.textContent = `ID de Usuario: ${currentUserId}`;
+        console.log(`User ID: ${currentUserId}`);
+
+        await fetchChatHistory(currentUserId);
+        document.getElementById("current-year").textContent =
+          new Date().getFullYear();
+        setupEventListeners();
+      }
+
+      /**
+       * Generates or retrieves a unique user ID from localStorage.
+       * @returns {string} The unique user ID.
+       */
+      function getOrCreateUserId() {
+        let userId = localStorage.getItem("chatUserId");
+        if (!userId) {
+          userId =
+            "guest_" +
+            Date.now() +
+            "_" +
+            Math.random().toString(36).substring(2, 9);
+          console.warn(
+            "No se encontró un ID de usuario. Se ha generado un ID de invitado. El historial solo se cargará si este ID ha interactuado previamente."
+          );
+        }
+        return userId;
+      }
+
+      /**
+       * Sets up event listeners for buttons.
+       */
+      function setupEventListeners() {
+        clearHistoryBtn.addEventListener("click", confirmClearHistory);
+        lightModeBtn.addEventListener("click", () =>
+          applyTheme("light", localStorage.getItem("color") || "blue")
+        );
+        darkModeBtn.addEventListener("click", () =>
+          applyTheme("dark", localStorage.getItem("color") || "blue")
+        );
+        blueThemeBtn.addEventListener("click", () =>
+          applyTheme(localStorage.getItem("theme") || "light", "blue")
+        );
+        purpleThemeBtn.addEventListener("click", () =>
+          applyTheme(localStorage.getItem("theme") || "light", "purple")
+        );
+        greenThemeBtn.addEventListener("click", () =>
+          applyTheme(localStorage.getItem("theme") || "light", "green")
+        );
+      }
+
+      /**
+       * Confirms with the user before clearing history.
+       */
+      function confirmClearHistory() {
+        // Using a simple window.confirm for now. In a real app,
+        // consider using a custom modal for better UX/consistency.
+        const isConfirmed = window.confirm(
+          "¿Estás seguro de que quieres limpiar todo el historial de chat para este usuario? Esta acción es irreversible."
+        );
+        if (isConfirmed) {
+          clearChatHistory(currentUserId);
+        }
+      }
+
+      /**
+       * Clears the chat history for the current user from localStorage.
+       * In a real application, this would also involve an API call to clear history on the backend.
+       * @param {string} userId - The current user's ID.
+       */
+      async function clearChatHistory(userId) {
+        showLoading(true, "Limpiando historial...");
+        try {
+          // --- Simulación de llamada a la API para limpiar el historial en el backend ---
+          // En una aplicación real, descomentarías y usarías este bloque:
+          /*
+                const response = await fetch(`${API_BASE_URL}/interactuar/historial/${userId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        // Agrega cabeceras de autenticación si tu API las requiere
+                        // 'Authorization': `Bearer ${yourAuthToken}`,
+                    },
+                });
+                if (!response.ok) {
+                    const errorData = await response.json(); // O response.text() si no es JSON
+                    throw new Error(errorData.message || 'Fallo al limpiar el historial en el backend.');
+                }
+                */
+
+          localStorage.removeItem("chatUserId"); // Elimina el ID de usuario para reiniciar el historial local
+          currentUserId = getOrCreateUserId(); // Genera un nuevo ID (o de invitado)
+          userIdDisplay.textContent = `ID de Usuario: ${currentUserId}`;
+
+          historialConversacionesDiv.innerHTML = ""; // Limpia la UI
+          noHistoryMessage.classList.remove("hidden"); // Muestra el mensaje de historial vacío
+          noHistoryMessage.classList.add("visible"); // Aplica el estilo de visible
+          showError(""); // Limpia cualquier error previo
+          lastDisplayedDate = null; // Reinicia el rastreador de fechas
+
+          console.log(`Historial de chat limpiado para el usuario ${userId}.`);
+          // Podrías mostrar un mensaje de éxito al usuario aquí, por ejemplo, con un modal.
+        } catch (error) {
+          console.error("Error al limpiar el historial de chat:", error);
+          showError(
+            error.message || "No se pudo limpiar el historial de chat."
+          );
+        } finally {
+          showLoading(false);
+        }
+      }
+
+      /**
+       * Fetches the chat history for the current user from the API.
+       * @param {string} userId - The current user's ID.
+       */
+      async function fetchChatHistory(userId) {
+        const url = `${API_BASE_URL}/interactuar/historial/${userId}`;
+        showLoading(true, "Cargando historial...");
+        historialConversacionesDiv.innerHTML = ""; // Limpia mensajes previos
+        noHistoryMessage.classList.add("hidden"); // Oculta el mensaje de historial vacío inicialmente
+        lastDisplayedDate = null; // Reinicia el rastreador de fechas para una nueva carga
+
+        try {
+          const response = await fetch(url);
+
+          if (!response.ok) {
+            const errorText = await response.text();
+            console.error(
+              `API Error - Status: ${response.status}, Body:`,
+              errorText
+            );
+            throw new Error(
+              `Error ${response.status}: ${errorText.substring(
+                0,
+                100
+              )}... (Ver consola para más detalles)`
+            );
+          }
+
+          const data = await response.json();
+
+          if (
+            data.historial &&
+            Array.isArray(data.historial) &&
+            data.historial.length > 0
+          ) {
+            // Ordena el historial por fecha para asegurar el orden correcto de visualización
+            data.historial.sort(
+              (a, b) =>
+                new Date(a.fecha).getTime() - new Date(b.fecha).getTime()
+            );
+
+            data.historial.forEach((entry) => {
+              displayMessage("user", entry.mensaje_usuario, entry.fecha);
+              displayMessage("assistant", entry.mensaje_asistente, entry.fecha);
+            });
+          } else {
+            noHistoryMessage.classList.remove("hidden"); // Muestra el mensaje de historial vacío
+            console.warn(
+              "No hay historial de chat disponible o la estructura es inesperada:",
+              data
+            );
+          }
+        } catch (error) {
+          console.error("Error fetching chat history:", error);
+          if (error instanceof SyntaxError) {
+            showError(
+              `Error al procesar el historial del servidor (no es JSON válido). Posiblemente el servidor devolvió HTML. Mensaje: ${error.message}`
+            );
+          } else {
+            showError(error.message || "Error al cargar el historial de chat.");
+          }
+        } finally {
+          showLoading(false);
+          scrollToBottom(); // Desplázate al final después de cargar el historial
+        }
+      }
+
+      /**
+       * Displays a message in the chat history, including date separators.
+       * @param {"user" | "assistant"} sender - The sender of the message ("user" or "assistant").
+       * @param {string} message - The message content.
+       * @param {string} [timestamp] - ISO string timestamp of the message.
+       */
+      function displayMessage(
+        sender,
+        message,
+        timestampStr = new Date().toISOString()
+      ) {
+        const messageDate = new Date(timestampStr);
+        const today = new Date();
+        const yesterday = new Date(today);
+        yesterday.setDate(today.getDate() - 1);
+
+        let dateToDisplay;
+        if (messageDate.toDateString() === today.toDateString()) {
+          dateToDisplay = "Hoy";
+        } else if (messageDate.toDateString() === yesterday.toDateString()) {
+          dateToDisplay = "Ayer";
+        } else {
+          dateToDisplay = messageDate.toLocaleDateString("es-ES", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          });
+        }
+
+        // Add date separator if the date changes or it's the first message
+        if (
+          lastDisplayedDate === null ||
+          messageDate.toDateString() !== lastDisplayedDate.toDateString()
+        ) {
+          const dateSeparator = document.createElement("div");
+          dateSeparator.classList.add(
+            "text-center",
+            "text-gray",
+            "text-sm",
+            "my-4",
+            "relative"
+          );
+          dateSeparator.innerHTML = `<span class="bg-background px-3 py-1 rounded-full border border-base">${dateToDisplay}</span>`;
+          historialConversacionesDiv.appendChild(dateSeparator);
+          lastDisplayedDate = messageDate;
+        }
+
+        const messageWrapper = document.createElement("div");
+        const messageBubble = document.createElement("div");
+        const messageTime = document.createElement("div");
+
+        messageBubble.textContent = message;
+        messageBubble.classList.add(
+          "p-3",
+          "rounded-xl",
+          "max-w-[80%]",
+          "shadow-sm",
+          "text-sm"
+        );
+
+        messageTime.textContent = messageDate.toLocaleTimeString("es-ES", {
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+        messageTime.classList.add("text-xs", "text-gray", "mt-1");
+
+        if (sender === "user") {
+          messageWrapper.classList.add(
+            "flex",
+            "flex-col",
+            "items-end",
+            "ml-auto"
+          );
+          messageBubble.classList.add(
+            "bg-primary",
+            "text-white",
+            "rounded-br-none"
+          );
+        } else {
+          messageWrapper.classList.add(
+            "flex",
+            "flex-col",
+            "items-start",
+            "mr-auto"
+          );
+          messageBubble.classList.add(
+            "bg-surface",
+            "text-color",
+            "rounded-bl-none"
+          );
+        }
+
+        messageWrapper.appendChild(messageBubble);
+        messageWrapper.appendChild(messageTime);
+        historialConversacionesDiv.appendChild(messageWrapper);
+        scrollToBottom();
+      }
+
+      /**
+       * Displays an error message to the user.
+       * @param {string} message - The error message to display.
+       */
+      function showError(message) {
+        errorMessage.textContent = message;
+        errorMessage.classList.toggle("hidden", !message);
+      }
+
+      /**
+       * Toggles the loading indicator.
+       * @param {boolean} isLoading - True to show loading, false to hide.
+       * @param {string} [loadingText='Cargando...'] - Custom text for the loading message.
+       */
+      function showLoading(isLoading, loadingText = "Cargando...") {
+        loadingMessage.textContent = loadingText;
+        loadingMessage.classList.toggle("hidden", !isLoading);
+      }
+
+      /**
+       * Scrolls the chat history to the bottom.
+       */
+      function scrollToBottom() {
+        historialConversacionesDiv.scrollTop =
+          historialConversacionesDiv.scrollHeight;
+      }
+    </script>
+  </body>
+</html>
