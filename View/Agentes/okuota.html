@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Okuota</title>
+    <link rel="icon" href="assets/img/logo.png" type="image/png" />
+
+    <!-- LokiJS -->
+    <script src="https://cdn.jsdelivr.net/npm/lokijs@1.5.12/build/lokijs.min.js"></script>
+
+    <style>
+      :root {
+        --p: #5d7eff;
+        --pd: #4a6be6;
+        --bg: #f9f9ff;
+        --s: #ffffff;
+        --t: #1a1a1a;
+        --b: #e8e8f0;
+        --radius: 20px;
+        --transition: all 0.3s ease;
+      }
+
+      .dark {
+        --p: #7c9eff;
+        --pd: #5b7bff;
+        --bg: #0d0d12;
+        --s: #1a1a20;
+        --t: #e0e0e0;
+        --b: #2a2a32;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI Variable", system-ui, sans-serif;
+        background: var(--bg);
+        color: var(--t);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        transition: var(--transition);
+      }
+
+      /* Navbar a la izquierda */
+      .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 250px;
+        height: 100vh;
+        background: var(--s);
+        border-right: 1px solid var(--b);
+        padding: 20px;
+        overflow-y: auto;
+        box-shadow: 6px 0 32px rgba(0, 0, 0, 0.08);
+      }
+
+      .brand {
+        font-size: 1.8rem;
+        font-weight: 900;
+        color: var(--p);
+        text-decoration: none;
+        display: block;
+        margin-bottom: 20px;
+      }
+
+      .nav-links {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-bottom: 20px;
+      }
+
+      .nav-links a {
+        padding: 10px 14px;
+        border-radius: 12px;
+        font-weight: 600;
+        text-decoration: none;
+        color: var(--t);
+        transition: var(--transition);
+      }
+
+      .nav-links a:hover {
+        background: var(--p);
+        color: #fff;
+      }
+
+      .nav-controls {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      #toggle-theme {
+        width: 100%;
+        padding: 10px;
+        border-radius: 10px;
+        border: none;
+        background: var(--bg);
+        font-size: 1rem;
+        cursor: pointer;
+        color: var(--p);
+      }
+
+      main {
+        margin-left: 250px; /* deja espacio para el navbar a la izquierda */
+        padding: 40px;
+        background: var(--bg);
+      }
+
+      .chat-section {
+        max-width: 900px;
+        margin: 0 auto;
+        background: var(--s);
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+        border: 1px solid var(--b);
+      }
+
+      .chat-section h2 {
+        margin-bottom: 20px;
+      }
+
+      #okuota-form {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      #semantic-input {
+        min-height: 140px;
+        border-radius: 16px;
+        padding: 18px;
+        font-size: 1rem;
+        border: 1px solid var(--b);
+        resize: vertical;
+      }
+
+      #analyze-btn {
+        align-self: flex-start;
+        padding: 14px 24px;
+        border-radius: 14px;
+        border: none;
+        background: var(--p);
+        color: #fff;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      #semantic-output {
+        margin-top: 30px;
+        background: var(--bg);
+        padding: 20px;
+        border-radius: 16px;
+        border: 1px solid var(--b);
+      }
+
+      .log {
+        margin-top: 10px;
+        font-size: 0.95rem;
+        line-height: 1.6;
+      }
+    </style>
+  </head>
+
+  <body>
+    <nav class="navbar" role="navigation" aria-label="Navegación principal">
+    <a class="brand" href="/View/index.html">Korbux</a>
+      <div class="nav-links" aria-label="Módulos disponibles">
+        <a href="okuota.html">Okuota</a>
+        <a href="monet.html">Monet</a>
+        <a href="ditters.html">Ditters</a>
+        <a href="jean.html">Jean</a>
+        <a href="lovelace.html">Lovelace</a>
+        <a href="santaolalla.html">Santa Olalla</a>
+        <a href="/View/perfil.html">Perfil</a>
+        <a href="/View/historial.html">Historial</a>
+      </div>
+      <div class="nav-controls">
+        <button id="toggle-theme" title="Alternar tema claro/oscuro"> TEMA </button>
+      </div>
+    </nav>
+
+    <main class="main-container">
+      <section class="chat-section" role="region" aria-label="Área semántica">
+        <h2>Okuota · Interpretación semántica</h2>
+        <form id="okuota-form" autocomplete="off">
+          <textarea
+            id="semantic-input"
+            placeholder="Escribe una idea, concepto o pregunta compleja..."
+            required
+          ></textarea>
+          <button id="analyze-btn" type="submit">Analizar</button>
+        </form>
+
+        <div id="semantic-output">
+          <strong>Resultado:</strong>
+          <div id="interpretacion">[esperando entrada...]</div>
+          <div class="log" id="registro-log"></div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const db = new loki("korbux.json", {
+        autoload: true,
+        autosave: true,
+        autosaveInterval: 5000,
+        autoloadCallback: () => {
+          if (!db.getCollection("conocimiento")) {
+            db.addCollection("conocimiento", { unique: ["palabra"] });
+          }
+          if (!db.getCollection("auditoria")) {
+            db.addCollection("auditoria");
+          }
+        },
+      });
+
+      function extraerConceptos(texto) {
+        const comunes = ["quiero","que","me","una","el","la","por","favor"];
+        return texto
+          .toLowerCase()
+          .split(/\W+/)
+          .filter((p) => p && p.length > 4 && !comunes.includes(p));
+      }
+
+      document.getElementById("okuota-form").addEventListener("submit", function (e) {
+        e.preventDefault();
+        const texto = document.getElementById("semantic-input").value.trim();
+        const salida = document.getElementById("interpretacion");
+        const log = document.getElementById("registro-log");
+
+        if (!texto) return;
+
+        const conocimiento = db.getCollection("conocimiento");
+        const auditoria = db.getCollection("auditoria");
+        const usuario = "daniel_korbux";
+
+        const conceptos = extraerConceptos(texto);
+        const nuevos = conceptos.filter((p) => !conocimiento.findOne({ palabra: p }));
+
+        nuevos.forEach((palabra) => {
+          conocimiento.insert({
+            palabra,
+            significado: "Pendiente",
+            contexto: "Detectada en Okuota",
+            usuario,
+            fecha_registro: new Date().toISOString(),
+          });
+
+          auditoria.insert({
+            tipo: "aprendizaje",
+            campo: "palabra",
+            nuevo: palabra,
+            usuario,
+            fecha: new Date().toISOString(),
+            modulo: "Okuota",
+          });
+
+          log.innerHTML += `Nueva palabra aprendida: <strong>${palabra}</strong><br>`;
+        });
+
+        const conceptoClave = conceptos[0] || "concepto no identificado";
+        salida.innerHTML = `Interpretando semánticamente: <em>${conceptoClave}</em>`;
+      });
+
+      document.getElementById("toggle-theme").addEventListener("click", () => {
+        document.documentElement.classList.toggle("dark");
+      });
+    </script>
+  </body>
+</html>

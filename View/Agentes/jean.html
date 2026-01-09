@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Jean</title>
+    <link rel="icon" href="assets/img/logo.png" type="image/png" />
+    <script src="https://cdn.jsdelivr.net/npm/lokijs@1.5.12/build/lokijs.min.js"></script>
+
+    <style>
+      :root {
+        --p: #5d7eff;
+        --pd: #4a6be6;
+        --bg: #f9f9ff;
+        --s: #ffffff;
+        --t: #1a1a1a;
+        --b: #e8e8f0;
+        --radius: 20px;
+        --transition: all 0.3s ease;
+      }
+
+      .dark {
+        --p: #7c9eff;
+        --pd: #5b7bff;
+        --bg: #0d0d12;
+        --s: #1a1a20;
+        --t: #e0e0e0;
+        --b: #2a2a32;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI Variable", system-ui, sans-serif;
+        background: var(--bg);
+        color: var(--t);
+        min-height: 100vh;
+        display: flex;
+        margin: 0;
+      }
+
+      /* Navbar a la izquierda */
+      .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 250px;
+        height: 100vh;
+        background: var(--s);
+        border-right: 1px solid var(--b);
+        padding: 20px;
+        overflow-y: auto;
+        box-shadow: 6px 0 32px rgba(0, 0, 0, 0.08);
+      }
+
+      .brand {
+        font-size: 1.8rem;
+        font-weight: 900;
+        color: var(--p);
+        text-decoration: none;
+        display: block;
+        margin-bottom: 20px;
+      }
+
+      .nav-links {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-bottom: 20px;
+      }
+
+      .nav-links a {
+        padding: 10px 14px;
+        border-radius: 12px;
+        font-weight: 600;
+        text-decoration: none;
+        color: var(--t);
+        transition: var(--transition);
+      }
+
+      .nav-links a:hover {
+        background: var(--p);
+        color: #fff;
+      }
+
+      .nav-controls {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      #toggle-theme {
+        width: 100%;
+        padding: 10px;
+        border-radius: 10px;
+        border: none;
+        background: var(--bg);
+        font-size: 1rem;
+        cursor: pointer;
+        color: var(--p);
+      }
+
+      main {
+        margin-left: 250px;
+        padding: 40px;
+        flex: 1;
+      }
+
+      .chat-section {
+        max-width: 900px;
+        margin: 0 auto;
+        background: var(--s);
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+        border: 1px solid var(--b);
+      }
+
+      .chat-section h2 {
+        margin-bottom: 20px;
+      }
+
+      #jean-form {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      #script-input {
+        min-height: 200px;
+        border-radius: 16px;
+        padding: 18px;
+        font-size: 1rem;
+        border: 1px solid var(--b);
+        resize: vertical;
+      }
+
+      #generate-btn {
+        align-self: flex-start;
+        padding: 14px 24px;
+        border-radius: 14px;
+        border: none;
+        background: var(--p);
+        color: #fff;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      #script-output {
+        margin-top: 30px;
+        background: var(--bg);
+        padding: 20px;
+        border-radius: 16px;
+        border: 1px solid var(--b);
+      }
+
+      #video-output {
+        margin-top: 30px;
+        background: var(--bg);
+        padding: 20px;
+        border-radius: 16px;
+        border: 1px solid var(--b);
+      }
+
+      #video-placeholder {
+        width: 100%;
+        height: 300px;
+        background: #000;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 12px;
+        text-align: center;
+        padding: 20px;
+      }
+
+      .log {
+        margin-top: 10px;
+        font-size: 0.95rem;
+        line-height: 1.6;
+      }
+    </style>
+  </head>
+
+  <body>
+    <nav class="navbar" role="navigation" aria-label="Navegación principal">
+    <a class="brand" href="/View/index.html">Korbux</a>
+      <div class="nav-links" aria-label="Módulos disponibles">
+        <a href="okuota.html">Okuota</a>
+        <a href="monet.html">Monet</a>
+        <a href="ditters.html">Ditters</a>
+        <a href="jean.html">Jean</a>
+        <a href="lovelace.html">Lovelace</a>
+        <a href="santaolalla.html">Santa Olalla</a>
+        <a href="/View/perfil.html">Perfil</a>
+        <a href="/View/historial.html">Historial</a>
+      </div>
+      <div class="nav-controls">
+        <button id="toggle-theme" title="Alternar tema claro/oscuro"> TEMA </button>
+      </div>
+    </nav>
+
+    <main>
+      <section class="chat-section">
+        <h2>Jean · Creación de guiones audiovisuales</h2>
+        <form id="jean-form" autocomplete="off">
+          <textarea
+            id="script-input"
+            placeholder="Escribe aquí tu idea para una serie, película o documental..."
+            required
+          ></textarea>
+          <button id="generate-btn" type="submit">Generar guion</button>
+        </form>
+
+        <div id="script-output">
+          <strong>Guion generado:</strong>
+          <div id="resultado-guion">[esperando entrada...]</div>
+          <div class="log" id="registro-log"></div>
+        </div>
+
+        <!-- Sección de vídeo -->
+        <div id="video-output">
+          <strong>Vídeo generado:</strong>
+          <div id="video-placeholder">[aquí se mostrará el vídeo]</div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const db = new loki("korbux.json", {
+        autoload: true,
+        autosave: true,
+        autosaveInterval: 5000,
+        autoloadCallback: () => {
+          if (!db.getCollection("guiones")) {
+            db.addCollection("guiones");
+          }
+          if (!db.getCollection("auditoria")) {
+            db.addCollection("auditoria");
+          }
+        },
+      });
+
+      document.getElementById("jean-form").addEventListener("submit", function (e) {
+        e.preventDefault();
+        const texto = document.getElementById("script-input").value.trim();
+        const salida = document.getElementById("resultado-guion");
+        const log = document.getElementById("registro-log");
+        const video = document.getElementById("video-placeholder");
+
+        if (!texto) return;
+
+        const guiones = db.getCollection("guiones");
+        const auditoria = db.getCollection("auditoria");
+        const usuario = "daniel_korbux";
+
+        guiones.insert({
+          contenido: texto,
+          usuario,
+          fecha_registro: new Date().toISOString(),
+        });
+
+        auditoria.insert({
+          tipo: "creacion",
+          campo: "guion",
+          nuevo: texto.substring(0, 50) + "...",
+          usuario,
+          fecha: new Date().toISOString(),
+                   modulo: "Jean",
+        });
+
+        salida.innerHTML = `Guion almacenado: <em>${texto}</em>`;
+        log.innerHTML += `Nuevo guion registrado por ${usuario}<br>`;
+
+        // Simulación inicial de vídeo
+        video.innerHTML = `Generando vídeo a partir de la idea: <em>${texto}</em>`;
+      });
+
+      // Nueva función para crear vídeos con parámetros
+      function crearVideo({ tipo = "corto", duracion = "ilimitada", calidad = "HD", idioma = "español" }) {
+        const video = document.getElementById("video-placeholder");
+        video.innerHTML = `
+          <div>
+            <p><strong>Tipo:</strong> ${tipo}</p>
+            <p><strong>Duración:</strong> ${duracion}</p>
+            <p><strong>Calidad:</strong> ${calidad}</p>
+            <p><strong>Idioma de diálogos:</strong> ${idioma}</p>
+            <p>Simulación: vídeo ${tipo} generado con las especificaciones solicitadas.</p>
+          </div>
+        `;
+      }
+
+      // Ejemplo de uso:
+      // crearVideo({ tipo: "película", duracion: "120 min", calidad: "4K", idioma: "inglés" });
+
+      document.getElementById("toggle-theme").addEventListener("click", () => {
+        document.documentElement.classList.toggle("dark");
+      });
+    </script>
+  </body>
+</html>

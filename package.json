@@ -1,0 +1,48 @@
+{
+  "name": "asistente-virtual",
+  "version": "1.0.0",
+  "description": "Un asistente virtual interactivo construido con Node.js, Express y un diseño frontend inspirado en Cyberpunk.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"No se han definido pruebas\" && exit 1",
+    "lint": "eslint .",
+    "build": "node build.js"
+  },
+  "keywords": [
+    "asistente",
+    "virtual",
+    "chatbot",
+    "nodejs",
+    "express",
+    "cyberpunk",
+    "AI"
+  ],
+  "author": "Nombre del Autor",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "^1.10.0",
+    "mysql2": "^3.16.0",
+    "nodemailer": "^7.0.12",
+    "pg": "^8.16.3",
+    "sequelize": "^6.37.7",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "electron-packager": "^17.1.2",
+    "eslint": "^9.39.2",
+    "nodemon": "^3.1.0",
+    "typescript": "^5.9.3"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

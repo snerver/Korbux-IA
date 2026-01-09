@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Registro de usuario</title>
+    <link rel="icon" href="assets/img/logo.png" type="image/png" />
+    <style>
+      :root {
+        --p: #5d7eff;
+        --pd: #4a6be6;
+        --bg: #f9f9ff;
+        --s: #ffffff;
+        --t: #1a1a1a;
+        --b: #e8e8f0;
+        --radius: 20px;
+        --transition: all 0.3s ease;
+      }
+
+      body {
+        font-family: "Segoe UI Variable", system-ui, sans-serif;
+        background: var(--bg);
+        color: var(--t);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .registro-card {
+        max-width: 400px;
+        width: 100%;
+        background: var(--s);
+        border: 1px solid var(--b);
+        border-radius: var(--radius);
+        padding: 30px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+      }
+
+      .registro-card h2 {
+        margin-bottom: 20px;
+        font-size: 1.6rem;
+        text-align: center;
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      label {
+        font-weight: 600;
+        font-size: 0.95rem;
+      }
+
+      input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid var(--b);
+        border-radius: var(--radius);
+        font-size: 1rem;
+      }
+
+      input:focus {
+        border-color: var(--p);
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(93, 126, 255, 0.2);
+      }
+
+      .password-strength {
+        height: 12px;
+        border-radius: var(--radius);
+        background: #ddd;
+        overflow: hidden;
+        display: flex;
+        margin-top: 10px;   /* espacio debajo del input */
+        margin-bottom: 5px; /* espacio antes del texto */
+      }
+
+      .strength-bar {
+        flex: 1;
+        transition: var(--transition);
+      }
+
+      .strength-text {
+        font-size: 0.9rem;
+        font-weight: bold;
+        text-align: center;
+      }
+
+      .registro-btn {
+        margin-top: 10px;
+        background-color: var(--p);
+        color: #fff;
+        padding: 12px;
+        border-radius: var(--radius);
+        border: none;
+        font-weight: bold;
+        cursor: pointer;
+        transition: var(--transition);
+      }
+
+      .registro-btn:hover {
+        background-color: var(--pd);
+        transform: translateY(-2px);
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <section role="region" aria-label="Registro de usuario">
+        <div class="registro-card">
+          <h2>Crear cuenta de usuario</h2>
+          <form id="registro-form">
+            <label for="nombre">Nombre de usuario:</label>
+            <input type="text" id="nombre" required />
+
+            <label for="password">Contraseña:</label>
+            <input type="password" id="password" required />
+            <div class="password-strength">
+              <div class="strength-bar" id="bar1"></div>
+              <div class="strength-bar" id="bar2"></div>
+              <div class="strength-bar" id="bar3"></div>
+            </div>
+            <div class="strength-text" id="strength-text">Insegura</div>
+
+            <label for="confirm-password">Confirmar contraseña:</label>
+            <input type="password" id="confirm-password" required />
+
+            <button type="submit" class="registro-btn">Registrar</button>
+          </form>
+        </div>
+      </section>
+    </main>
+
+<script>
+  const passwordInput = document.getElementById("password");
+  const bar1 = document.getElementById("bar1");
+  const bar2 = document.getElementById("bar2");
+  const bar3 = document.getElementById("bar3");
+  const strengthText = document.getElementById("strength-text");
+  const registroForm = document.getElementById("registro-form");
+
+  // Evaluar fortaleza de la contraseña
+  passwordInput.addEventListener("input", () => {
+    const val = passwordInput.value.trim();
+    let strength = 0;
+
+    if (val.length >= 6) strength++;
+    if (/[A-Z]/.test(val) && /[0-9]/.test(val)) strength++;
+    if (/[^A-Za-z0-9]/.test(val) && val.length >= 10) strength++;
+
+    // Resetear barras
+    bar1.style.background = "#ddd";
+    bar2.style.background = "#ddd";
+    bar3.style.background = "#ddd";
+
+    if (strength === 1) {
+      bar1.style.background = "red";
+      strengthText.textContent = "Insegura";
+    } else if (strength === 2) {
+      bar1.style.background = "orange";
+      bar2.style.background = "orange";
+      strengthText.textContent = "Segura";
+    } else if (strength === 3) {
+      bar1.style.background = "green";
+      bar2.style.background = "green";
+      bar3.style.background = "green";
+      strengthText.textContent = "Robusta";
+    } else {
+      strengthText.textContent = "Insegura";
+    }
+  });
+
+  // Manejo del formulario de registro
+  registroForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const nombre = document.getElementById("nombre").value.trim();
+    const password = document.getElementById("password").value.trim();
+    const confirmPassword = document.getElementById("confirm-password").value.trim();
+
+    if (!nombre || !password || !confirmPassword) {
+      alert("Por favor, completa todos los campos.");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      alert("Las contraseñas no coinciden.");
+      return;
+    }
+
+    const usuario = { nombre, password };
+    localStorage.setItem("usuarioRegistrado", JSON.stringify(usuario));
+
+    // Redirigir al perfil
+    window.location.href = "perfil.html";
+  });
+</script>
+
+  </body>
+</html>

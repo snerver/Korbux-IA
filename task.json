@@ -1,0 +1,62 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Compilar TypeScript",
+            "type": "shell",
+            "command": "npx tsc",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": "$tsc",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "dedicated",
+                "showReuseMessage": true,
+                "clear": true
+            }
+        },
+        {
+            "label": "Compilar TS (pretty)",
+            "type": "shell",
+            "command": "npx tsc --pretty",
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "problemMatcher": "$tsc",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "dedicated",
+                "showReuseMessage": true,
+                "clear": true
+            }
+        },
+        {
+            "label": "Limpiar dist",
+            "type": "shell",
+            "command": "rimraf dist",
+            "problemMatcher": []
+        },
+        {
+            "label": "Compilar + Limpiar",
+            "dependsOn": [
+                "Limpiar dist",
+                "Compilar TS (pretty)"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "Verificar TS (watch)",
+            "type": "shell",
+            "command": "npx tsc --watch",
+            "isBackground": true,
+            "problemMatcher": "$tsc-watch"
+        }
+    ]
+}

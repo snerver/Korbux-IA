@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Perfil</title>
+    <!-- Favicon: ajusta la ruta según tu estructura -->
+    <link rel="icon" href="assets/img/logo.png" type="image/png" />
+    <!-- Librería LokiJS (si la usas en tu proyecto) -->
+    <script src="https://cdn.jsdelivr.net/npm/lokijs@1.5.9/build/lokijs.min.js"></script>
+    <style>
+      :root {
+        --p: #5d7eff;
+        --pd: #4a6be6;
+        --bg: #f9f9ff;
+        --s: #ffffff;
+        --t: #1a1a1a;
+        --b: #e8e8f0;
+        --radius: 20px;
+        --nav-w: 139px;
+        --transition: all 0.3s ease;
+      }
+
+      .dark {
+        --p: #7c9eff;
+        --pd: #5b7bff;
+        --bg: #0d0d12;
+        --s: #1a1a20;
+        --t: #e0e0e0;
+        --b: #2a2a32;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI Variable", "Segoe UI", system-ui, sans-serif;
+        background: var(--bg);
+        color: var(--t);
+        min-height: 100vh;
+        display: flex;
+        transition: var(--transition);
+      }
+
+      /* NAVBAR LATERAL */
+      .navbar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        height: 100vh;
+        width: var(--nav-w);
+        background: var(--s);
+        border-right: 1px solid var(--b);
+        z-index: 1000;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 30px 0;
+        box-shadow: 6px 0 32px rgba(0, 0, 0, 0.1);
+        transition: var(--transition);
+      }
+
+      .brand {
+        font-size: 2.2rem;
+        font-weight: 900;
+        color: var(--p);
+        margin-bottom: 40px;
+        user-select: none;
+        text-decoration: none;
+      }
+
+      .nav-links {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+        width: 100%;
+        align-items: center;
+      }
+
+      .nav-links a {
+        width: 80%;
+        padding: 12px;
+        border-radius: 12px;
+        text-align: center;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--t);
+        background: transparent;
+        transition: var(--transition);
+        cursor: pointer;
+        text-decoration: none;
+        position: relative;
+      }
+
+      .nav-links a:hover,
+      .nav-links a.active {
+        background: var(--p);
+        color: #fff;
+        transform: scale(1.05);
+        box-shadow: 0 6px 18px rgba(93, 126, 255, 0.3);
+      }
+
+      .nav-controls {
+        margin-top: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        padding-top: 24px;
+        border-top: 1px solid var(--b);
+        width: 100%;
+        align-items: center;
+      }
+
+      #toggle-theme {
+        width: 52px;
+        height: 52px;
+        border-radius: 16px;
+        background: none;
+        border: none;
+        font-size: 1rem;
+        color: var(--t);
+        cursor: pointer;
+        transition: var(--transition);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      #toggle-theme:hover {
+        background: var(--p);
+        color: #fff;
+        transform: scale(1.1);
+      }
+
+      /* ÁREA PRINCIPAL */
+      main {
+        flex: 1;
+        margin-left: var(--nav-w);
+        display: flex;
+        padding: 40px;
+      }
+
+      /* Tarjeta de perfil */
+      .perfil-card {
+        max-width: 600px;
+        margin: auto;
+        background: var(--s);
+        border: 1px solid var(--b);
+        border-radius: var(--radius);
+        padding: 30px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+      }
+
+      .perfil-card h2 {
+        margin-top: 0;
+        font-size: 1.6rem;
+        color: var(--t);
+      }
+
+      .perfil-card p {
+        margin: 0.5rem 0;
+        font-size: 1rem;
+        opacity: 0.85;
+      }
+
+      .registro-btn {
+        margin-top: 1.5rem;
+        display: inline-block;
+        background-color: var(--p);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: var(--radius);
+        text-decoration: none;
+        font-weight: bold;
+        transition: var(--transition);
+      }
+
+      .registro-btn:hover {
+        background-color: var(--pd);
+        transform: translateY(-2px);
+      }
+
+      /* Ocultar visualmente pero accesible */
+      .visually-hidden {
+        position: absolute !important;
+        width: 1px !important;
+        height: 1px !important;
+        padding: 0 !important;
+        margin: -1px !important;
+        overflow: hidden !important;
+        clip: rect(0, 0, 0, 0) !important;
+        white-space: nowrap !important;
+        border: 0 !important;
+      }
+    </style>
+  </head>
+
+  <body>
+    <nav class="navbar" role="navigation" aria-label="Navegación principal">
+      <a class="brand" href="index.html">Korbux</a>
+      <div class="nav-links" aria-label="Módulos disponibles">
+        <a href="okuota.html">Okuota</a>
+        <a href="monet.html">Monet</a>
+        <a href="ditters.html">Ditters</a>
+        <a href="jean.html">Jean</a>
+        <a href="lovelace.html">Lovelace</a>
+        <a href="santaolalla.html">Santa Olalla</a>
+        <a href="perfil.html" class="active">Perfil</a>
+        <a href="historial.html">Historial</a>
+        <a href="registrarse.html">Registro</a>
+      </div>
+      <div class="nav-controls">
+        <label for="lang-select" class="visually-hidden">Idioma</label>
+        <select id="lang-select" aria-label="Seleccionar idioma">
+          <option value="es" selected>Español</option>
+          <option value="en">Inglés</option>
+          <option value="fr">Francés</option>
+          <option value="de">Alemán</option>
+          <option value="af">Africano</option>
+        </select>
+        <button id="toggle-theme" type="button" aria-pressed="false" aria-label="Alternar tema claro/oscuro">Tema</button>
+      </div>
+    </nav>
+
+    <main>
+      <section class="perfil-section" role="region" aria-label="Perfil del agente">
+        <div class="perfil-card">
+          <h2>Perfil del agente</h2>
+          <p><strong>Nombre:</strong> Daniel</p>
+          <p><strong>Identificador:</strong> daniel_korbux</p>
+          <p><strong>Rol:</strong> Arquitecto digital, líder de KORBUX IA</p>
+          <p><strong>Visión:</strong> Autonomía, privacidad y evolución semántica</p>
+          <p><strong>Estado:</strong> Activo y comprometido</p>
+
+          <a href="registrarse.html" class="registro-btn">Registrar nuevo agente</a>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const themeBtn = document.getElementById("toggle-theme");
+      themeBtn.addEventListener("click", () => {
+        document.documentElement.classList.toggle("dark");
+        const dark = document.documentElement.classList.contains("dark");
+        themeBtn.setAttribute("aria-pressed", dark);
+        themeBtn.textContent = dark ? "Tema claro" : "Tema oscuro";
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Monet</title>
+    <link rel="icon" href="assets/img/logo.png" type="image/png" />
+    <script src="https://cdn.jsdelivr.net/npm/lokijs@1.5.9/build/lokijs.min.js"></script>
+
+    <style>
+      :root {
+        --primary-color: #6c8efb;
+        --primary-dark: #4a6edb;
+        --background-color: #fdfdfd;
+        --text-color: #2e3a59;
+        --surface-color: #ffffff;
+        --border-color: #dcdcdc;
+        --gray-text: #7b8ca1;
+      }
+
+      .dark {
+        --primary-color: #a3bffa;
+        --background-color: #1c1c1c;
+        --text-color: #d1d5db;
+        --surface-color: #273549;
+        --border-color: #3e4a6b;
+        --gray-text: #a0aec0;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Courier New", Courier, monospace;
+        color: var(--text-color);
+        background-color: var(--background-color);
+        transition: color 0.3s ease, background-color 0.3s ease;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        line-height: 1.6;
+      }
+
+      .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 250px;
+        height: 100vh;
+        background-color: var(--surface-color);
+        border-right: 1px solid var(--border-color);
+        padding: 1rem;
+        overflow-y: auto;
+        z-index: 1000;
+      }
+
+      .navbar .brand {
+        display: block;
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+        text-decoration: none;
+      }
+
+      .nav-links {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .nav-links a {
+        text-decoration: none;
+        color: var(--text-color);
+        padding: 0.5rem;
+        border-radius: 0.375rem;
+        font-weight: 500;
+      }
+
+      .nav-links a:hover {
+        background-color: var(--primary-color);
+        color: #fff;
+      }
+
+      .nav-controls {
+        border-top: 1px solid var(--border-color);
+        padding-top: 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      #lang-select {
+        padding: 0.5rem;
+        border-radius: 0.375rem;
+        border: 1px solid var(--border-color);
+        background-color: var(--surface-color);
+        color: var(--text-color);
+        font-family: inherit;
+      }
+
+      #toggle-theme {
+        background: none;
+        border: none;
+        font-size: 1.2rem;
+        cursor: pointer;
+        color: var(--primary-color);
+      }
+
+      main {
+        margin-left: 250px;
+        padding: 2rem;
+      }
+
+      .chat-section {
+        max-width: 800px;
+        margin: auto;
+      }
+
+      textarea {
+        width: 100%;
+        min-height: 100px;
+        padding: 0.75rem;
+        border: 1px solid var(--border-color);
+        border-radius: 0.375rem;
+        resize: vertical;
+        font-family: inherit;
+        font-size: 1rem;
+        color: var(--text-color);
+        background-color: var(--surface-color);
+        margin-bottom: 1rem;
+      }
+
+      button {
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 0.375rem;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background-color: var(--primary-dark);
+      }
+
+      #visual-output {
+        background-color: var(--surface-color);
+        border: 1px solid var(--border-color);
+        border-radius: 0.375rem;
+        padding: 1rem;
+        margin-top: 1rem;
+      }
+
+      .log {
+        font-size: 0.9rem;
+        color: var(--gray-text);
+        margin-top: 0.5rem;
+      }
+    </style>
+  </head>
+
+  <body>
+      <nav class="navbar" role="navigation" aria-label="Navegación principal">
+    <a class="brand" href="/View/index.html">Korbux</a>
+      <div class="nav-links" aria-label="Módulos disponibles">
+        <a href="okuota.html">Okuota</a>
+        <a href="monet.html">Monet</a>
+        <a href="ditters.html">Ditters</a>
+        <a href="jean.html">Jean</a>
+        <a href="lovelace.html">Lovelace</a>
+        <a href="santaolalla.html">Santa Olalla</a>
+        <a href="/View/perfil.html">Perfil</a>
+        <a href="/View/historial.html">Historial</a>
+      </div>
+      <div class="nav-controls">
+        <button id="toggle-theme" title="Alternar tema claro/oscuro"> TEMA </button>
+      </div>
+    </nav>
+
+    <main class="main-container">
+      <section class="chat-section" role="region" aria-label="Área visual">
+        <h2>Monet · Generación visual semántica</h2>
+        <form id="monet-form" autocomplete="off">
+          <textarea
+            id="visual-input"
+            placeholder="Ej. Quiero que me dibujes un esternocleidomastoideo..."
+            required
+          ></textarea>
+          <button id="generate-btn" type="submit">Procesar</button>
+        </form>
+
+        <div id="visual-output">
+          <strong>Resultado:</strong>
+          <div id="imagen-generada">[esperando instrucción...]</div>
+          <div class="log" id="registro-log"></div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const db = new loki("korbux.json", {
+        autoload: true,
+        autosave: true,
+        autosaveInterval: 5000,
+        autoloadCallback: () => {
+          if (!db.getCollection("conocimiento")) {
+            db.addCollection("conocimiento", { unique: ["palabra"] });
+          }
+          if (!db.getCollection("auditoria")) {
+            db.addCollection("auditoria");
+          }
+        },
+      });
+
+      function extraerPalabrasClave(texto) {
+        const comunes = [
+          "quiero",
+          "que",
+          "me",
+          "dibujes",
+          "un",
+          "una",
+          "el",
+          "la",
+          "por",
+          "favor",
+        ];
+        return texto
+          .toLowerCase()
+          .split(/\W+/)
+                  .filter((p) => p.length > 4 && !comunes.includes(p));
+      }
+
+      document
+        .getElementById("monet-form")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          const texto = document.getElementById("visual-input").value.trim();
+          const imagen = document.getElementById("imagen-generada");
+          const log = document.getElementById("registro-log");
+
+          if (!texto) return;
+
+          const conocimiento = db.getCollection("conocimiento");
+          const auditoria = db.getCollection("auditoria");
+          const usuario = "daniel_korbux";
+
+          const claves = extraerPalabrasClave(texto);
+          const nuevas = claves.filter(
+            (p) => !conocimiento.findOne({ palabra: p })
+          );
+
+          nuevas.forEach((palabra) => {
+            conocimiento.insert({
+              palabra,
+              significado: "Pendiente",
+              contexto: "Detectada en Monet",
+              usuario,
+              fecha_registro: new Date().toISOString(),
+            });
+
+            auditoria.insert({
+              tipo: "aprendizaje",
+              campo: "palabra",
+              nuevo: palabra,
+              usuario,
+              fecha: new Date().toISOString(),
+              modulo: "Monet",
+            });
+
+            log.innerHTML += `Nueva palabra aprendida: <strong>${palabra}</strong><br>`;
+          });
+
+          const claveVisual =
+            claves.find((p) => p.includes("esternocleidomastoideo")) ||
+            claves[0];
+          imagen.innerHTML = `Generando imagen para: <em>${claveVisual}</em>`;
+        });
+
+      document.getElementById("toggle-theme").addEventListener("click", () => {
+        document.documentElement.classList.toggle("dark");
+      });
+    </script>
+  </body>
+</html>

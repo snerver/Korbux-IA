@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Inicio de sesión de usuario para Korbux AI"
+    />
+    <title>Iniciar Sesión</title>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+      body {
+        font-family: "Inter", sans-serif;
+        line-height: 1.6;
+        color: #333; /* text-gray-800 equivalent */
+        background-color: #f5f5f5; /* bg-gray-100 equivalent */
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        margin: 0;
+      }
+      /* Custom styles for modal */
+      .modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1000; /* Sit on top */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+        justify-content: center;
+        align-items: center;
+      }
+      .modal-content {
+        background-color: #fefefe;
+        margin: auto;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        width: 90%;
+        max-width: 400px;
+        text-align: center;
+        position: relative;
+      }
+      .modal-close-btn {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        color: #aaa;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+      }
+      .modal-close-btn:hover,
+      .modal-close-btn:focus {
+        color: #333;
+        text-decoration: none;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100 text-gray-800">
+    <header
+      class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white p-4 shadow-lg flex justify-between items-center px-6"
+      role="banner"
+    >
+      <div class="flex items-center">
+        <a
+          href="#"
+          class="text-3xl font-extrabold tracking-tight"
+          aria-label="Korbux Chat - Volver al inicio"
+          >Korbux</a
+        >
+      </div>
+      <nav
+        class="hidden md:block"
+        aria-label="Navegación principal de la aplicación"
+      >
+        <ul class="flex space-x-6">
+          <li>
+            <a
+              href="index.html"
+              class="text-lg font-medium hover:text-blue-200 transition-colors duration-200"
+              >Inicio</a
+            >
+          </li>
+          <li>
+            <a
+              href="iniciar_sesion.html"
+              aria-current="page"
+              class="text-lg font-medium hover:text-blue-200 transition-colors duration-200"
+              >Iniciar Sesión</a
+            >
+          </li>
+          <li>
+            <a
+              href="contacto.html"
+              class="text-lg font-medium hover:text-blue-200 transition-colors duration-200"
+              >Contacto</a
+            >
+          </li>
+          <li>
+            <a
+              href="perfil.html"
+              class="text-lg font-medium hover:text-blue-200 transition-colors duration-200"
+              >Cuenta</a
+            >
+          </li>
+          <li>
+            <a
+              href="historial.html"
+              class="text-lg font-medium hover:text-blue-200 transition-colors duration-200"
+              >Historial</a
+            >
+          </li>
+        </ul>
+      </nav>
+      <!-- Mobile menu button, if needed -->
+      <!-- <button class="md:hidden text-white text-2xl">☰</button> -->
+    </header>
+
+    <main
+      class="flex-1 flex flex-col items-center justify-center p-4 sm:p-6"
+      role="main"
+    >
+      <div class="bg-white rounded-xl shadow-lg p-8 w-full max-w-md">
+        <h1 class="text-center text-3xl font-bold mb-6 text-gray-800">
+          Iniciar Sesión
+        </h1>
+        <form id="loginForm">
+          <div class="mb-6">
+            <label for="email" class="block mb-2 text-gray-700 font-medium"
+              >Correo electrónico</label
+            >
+            <input
+              type="email"
+              id="email"
+              class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"
+              required
+              aria-required="true"
+            />
+          </div>
+
+          <div class="mb-6">
+            <label for="password" class="block mb-2 text-gray-700 font-medium"
+              >Contraseña</label
+            >
+            <input
+              type="password"
+              id="password"
+              class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"
+              required
+              aria-required="true"
+            />
+          </div>
+
+          <div class="mb-6 text-right">
+            <a
+              href="recuperar.html"
+              class="text-blue-600 text-sm hover:underline transition-colors duration-200"
+              >¿Olvidaste tu contraseña?</a
+            >
+          </div>
+
+          <button
+            type="submit"
+            class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed w-full flex items-center justify-center gap-2"
+          >
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+              <polyline points="10 17 15 12 10 7"></polyline>
+              <line x1="15" y1="12" x2="3" y2="12"></line>
+            </svg>
+            Iniciar Sesión
+          </button>
+        </form>
+
+        <div class="text-center mt-6 text-gray-600">
+          ¿No tienes una cuenta?
+          <a
+            href="registrarse.html"
+            class="text-blue-600 font-medium hover:underline transition-colors duration-200"
+            >Regístrate</a
+          >
+        </div>
+      </div>
+    </main>
+
+    <footer
+      class="bg-gray-800 text-gray-300 text-center p-4 text-sm mt-8 border-t border-gray-700"
+      role="contentinfo"
+    >
+      <p class="copyright">
+        &copy; 2025 Korbux. Todos los derechos reservados.
+        <a href="/privacy.html" class="text-blue-300 hover:underline"
+          >Política de Privacidad</a
+        >
+      </p>
+    </footer>
+
+    <!-- Custom Modal for messages -->
+    <div id="customModal" class="modal">
+      <div class="modal-content">
+        <span class="modal-close-btn" aria-label="Cerrar">&times;</span>
+        <h2 id="modalTitle" class="text-xl font-bold mb-4 text-gray-800"></h2>
+        <p id="modalMessage" class="text-gray-700 mb-6"></p>
+        <button
+          id="modalConfirmBtn"
+          class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        >
+          Aceptar
+        </button>
+      </div>
+    </div>
+
+    <script>
+      // JavaScript para manejar el formulario de inicio de sesión
+      document
+        .getElementById("loginForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          const btn = this.querySelector('button[type="submit"]');
+          const originalButtonContent = btn.innerHTML; // Guarda el contenido original del botón
+
+          // Simulación de estado de carga
+          btn.innerHTML = `
+                <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Iniciando sesión...
+            `;
+          btn.disabled = true;
+
+          // Simulación de inicio de sesión asíncrono
+          setTimeout(() => {
+            // Reemplazar alert() con la función de modal personalizada
+            showCustomModal(
+              "Inicio de Sesión Exitoso",
+              "Serás redirigido a tu perfil."
+            );
+
+            // Redirigir después de que el usuario cierre el modal o un breve retraso
+            // Aquí se redirige después de un breve retraso para que el usuario vea el modal
+            setTimeout(() => {
+              window.location.href = "perfil.html";
+            }, 2000); // Dar 2 segundos para que el usuario vea el mensaje antes de redirigir
+
+            // Restaurar el botón (aunque la página se redirigirá)
+            btn.innerHTML = originalButtonContent;
+            btn.disabled = false;
+          }, 1500);
+        });
+
+      // --- Funcionalidad de Modal Personalizado ---
+      const customModal = document.getElementById("customModal");
+      const modalTitle = document.getElementById("modalTitle");
+      const modalMessage = document.getElementById("modalMessage");
+      const modalConfirmBtn = document.getElementById("modalConfirmBtn");
+      const modalCloseBtn = customModal.querySelector(".modal-close-btn");
+
+      function showCustomModal(title, message) {
+        modalTitle.textContent = title;
+        modalMessage.textContent = message;
+        customModal.style.display = "flex"; // Make it visible and centered
+        customModal.setAttribute("aria-hidden", "false");
+        modalConfirmBtn.focus(); // Focus the confirm button for accessibility
+      }
+
+      function hideCustomModal() {
+        customModal.style.display = "none";
+        customModal.setAttribute("aria-hidden", "true");
+      }
+
+      // Event listeners for modal
+      modalConfirmBtn.addEventListener("click", hideCustomModal);
+      modalCloseBtn.addEventListener("click", hideCustomModal);
+      // Close modal if clicking outside of it
+      window.addEventListener("click", (event) => {
+        if (event.target === customModal) {
+          hideCustomModal();
+        }
+      });
+    </script>
+  </body>
+</html>

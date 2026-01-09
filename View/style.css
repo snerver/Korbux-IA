@@ -1,0 +1,543 @@
+:root {
+    --p: #5d7eff;
+    --pd: #4a6be6;
+    --bg: #f9f9ff;
+    --s: #ffffff;
+    --t: #1a1a1a;
+    --b: #e8e8f0;
+    --radius: 20px;
+    --nav-w: 139px;
+    --transition: all 0.3s ease;
+    /* Variable para transiciones */
+}
+
+body {
+    transition: var(--transition);
+}
+
+.dark {
+    --p: #7c9eff;
+    --pd: #5b7bff;
+    --bg: #0d0d12;
+    --s: #1a1a20;
+    --t: #e0e0e0;
+    --b: #2a2a32;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Segoe UI Variable", "Segoe UI", system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--t);
+    min-height: 100vh;
+    display: flex;
+    transition: var(--transition);
+}
+
+/* NAVBAR LATERAL */
+.nav {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    width: var(--nav-w);
+    background: var(--s);
+    border-right: 1px solid var(--b);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px 0;
+    box-shadow: 6px 0 32px rgba(0, 0, 0, 0.1);
+    transition: var(--transition);
+}
+
+.logo {
+    font-size: 2.2rem;
+    font-weight: 900;
+    color: var(--p);
+    margin-bottom: 40px;
+    user-select: none;
+}
+
+.nav-icons {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    width: 100%;
+    align-items: center;
+}
+
+.nav-icons a {
+    width: 80%;
+    /* más ancho para legibilidad */
+    padding: 12px;
+    border-radius: 12px;
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--t);
+    background: transparent;
+    transition: var(--transition);
+    cursor: pointer;
+    text-decoration: none;
+    position: relative;
+}
+
+.nav-icons a:hover,
+.nav-icons a.active {
+    background: var(--p);
+    color: #fff;
+    transform: scale(1.05);
+    box-shadow: 0 6px 18px rgba(93, 126, 255, 0.3);
+}
+
+.nav-icons a.active::after {
+    content: "";
+    position: absolute;
+    right: -10px;
+    width: 6px;
+    height: 30px;
+    background: var(--p);
+    border-radius: 3px;
+}
+
+/* Accesibilidad por teclado */
+.nav-icons a:focus-visible,
+#theme:focus-visible,
+#new-chat:focus-visible,
+.input-btn:focus-visible,
+#send-btn:focus-visible {
+    outline: 3px solid rgba(93, 126, 255, 0.5);
+    outline-offset: 2px;
+    border-radius: 20px;
+}
+
+.nav-bottom {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-top: 24px;
+    border-top: 1px solid var(--b);
+    width: 100%;
+    align-items: center;
+}
+
+#theme {
+    width: 52px;
+    height: 52px;
+    border-radius: 16px;
+    background: none;
+    border: none;
+    font-size: 1.85rem;
+    color: var(--t);
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#theme:hover {
+    background: var(--p);
+    color: #fff;
+    transform: scale(1.1);
+}
+
+.main {
+    flex: 1;
+    margin-left: var(--nav-w);
+    display: flex;
+}
+
+.sidebar {
+    width: 340px;
+    background: var(--s);
+    border-right: 1px solid var(--b);
+    display: flex;
+    flex-direction: column;
+    padding: 32px 28px;
+    transition: var(--transition);
+}
+
+#new-chat {
+    width: 100%;
+    padding: 16px 20px;
+    background: var(--p);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius);
+    font-weight: 600;
+    font-size: 1.05rem;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    box-shadow: 0 8px 25px rgba(93, 126, 255, 0.3);
+}
+
+#new-chat:hover {
+    background: var(--pd);
+    transform: translateY(-3px);
+}
+
+.recent-title {
+    margin: 40px 0 18px;
+    font-size: 1.4rem;
+    font-weight: 600;
+    opacity: 0.9;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#chats {
+    flex: 1;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    /* Firefox */
+    scrollbar-color: var(--p) var(--bg);
+}
+
+#chats li {
+    padding: 18px 20px;
+    background: var(--bg);
+    border-radius: var(--radius);
+    margin-bottom: 14px;
+    cursor: pointer;
+    transition: var(--transition);
+    font-size: 1.02rem;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    position: relative;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+}
+
+#chats li:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+}
+
+#chats li.active,
+#chats li:hover {
+    background: var(--p);
+    color: #fff;
+}
+
+#chats li.active::after {
+    content: "•";
+    position: absolute;
+    right: 20px;
+    font-size: 2rem;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 1; }
+}
+
+.chat-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg);
+}
+
+#history {
+    flex: 1;
+    padding: 50px 70px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    scrollbar-width: thin;
+    /* Firefox */
+    scrollbar-color: var(--p) var(--bg);
+}
+
+.msg {
+    max-width: 760px;
+    padding: 20px 28px;
+    border-radius: var(--radius);
+    line-height: 1.75;
+    font-size: 1.08rem;
+    position: relative;
+    word-wrap: break-word;
+    /* Evita desbordes */
+    white-space: pre-wrap;
+    /* Respeta saltos de línea */
+}
+
+.msg strong {
+    color: var(--p);
+    font-weight: 600;
+}
+
+.u {
+    background: var(--p);
+    color: #fff;
+    align-self: flex-end;
+    border-bottom-right-radius: 8px;
+    box-shadow: 0 8px 25px rgba(93, 126, 255, 0.35);
+}
+
+.b {
+    background: var(--s);
+    color: var(--t);
+    align-self: flex-start;
+    border: 1px solid var(--b);
+    border-bottom-left-radius: 8px;
+    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.08);
+}
+
+#form {
+    padding: 32px 70px;
+    background: var(--s);
+    border-top: 1px solid var(--b);
+    display: flex;
+    gap: 18px;
+    align-items: flex-end;
+}
+
+#input {
+    flex: 1;
+    padding: 20px 28px;
+    background: var(--bg);
+    border: 1px solid var(--b);
+    border-radius: 32px;
+    font-size: 1.1rem;
+    resize: none;
+    min-height: 64px;
+    max-height: 220px;
+    font-family: inherit;
+    outline: none;
+    transition: var(--transition);
+    line-height: 1.6;
+}
+
+#input:focus {
+    border-color: var(--p);
+    box-shadow: 0 0 0 5px rgba(93, 126, 255, 0.2);
+}
+
+.input-buttons {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+}
+
+/* Botón general */
+.input-btn {
+    width: 56px;
+    height: 56px;
+    background: var(--bg);
+    border: 1px solid var(--b);
+    border-radius: 50%;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    /* Mantener alineación y evitar recortes (de la sección utilitaria original) */
+    gap: 0.25rem;
+    padding: 0.5rem;
+    overflow: visible;
+}
+
+.input-btn:hover {
+    background: var(--p);
+    transform: scale(1.08);
+    box-shadow: 0 8px 25px rgba(93, 126, 255, 0.4);
+}
+
+/* Ícono dentro del botón (consolidado) */
+.input-btn img {
+    width: 28px;
+    height: 28px;
+    display: inline-block;
+    vertical-align: middle;
+    image-rendering: auto;
+    /* Paleta por tema (original) */
+    filter: brightness(0) saturate(100%) invert(45%);
+    opacity: 1;
+}
+
+/* Tema oscuro (original + halo sutil utilitario) */
+.dark .input-btn img {
+    filter: brightness(0) saturate(100%) invert(85%) drop-shadow(0 1px 1px rgba(0,0,0,0.35));
+}
+
+/* Hover: blanco (original) */
+.input-btn:hover img {
+    filter: brightness(0) saturate(100%) invert(100%);
+}
+
+/* Input file accesible oculto (utilitario original) */
+.input-btn input[type="file"] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+/* Botón enviar más compacto */
+#send-btn {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--p);
+    border: none;
+    color: #fff;
+    font-size: 1.3rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 25px rgba(93, 126, 255, 0.35);
+    transition: var(--transition);
+}
+
+#send-btn:hover {
+    background: var(--pd);
+    transform: translateY(-2px);
+}
+
+#send-btn:disabled {
+    background: var(--b);
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
+
+#send-btn:disabled:hover {
+    background: var(--b);
+    transform: none;
+}
+
+/* Botón “Ir al final” */
+#down {
+    position: fixed;
+    bottom: 120px;
+    right: 40px;
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    background: var(--p);
+    color: #fff;
+    border: none;
+    font-size: 2.2rem;
+    cursor: pointer;
+    display: none;
+    z-index: 999;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+    transition: 0.3s;
+}
+
+#down:hover {
+    transform: scale(1.12);
+}
+
+/* Animaciones de carga */
+@keyframes loading {
+    0% {
+        background-position: -200px 0;
+    }
+
+    100% {
+        background-position: calc(200px + 100%) 0;
+    }
+}
+
+.loading {
+    position: relative;
+    overflow: hidden;
+    background: var(--b);
+    color: transparent;
+}
+
+.loading::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    animation: loading 1.5s infinite;
+    background-size: 200px 100%;
+}
+
+/* Respeto a preferencias del usuario para reducir movimiento */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+/* Scrollbar para WebKit */
+#chats::-webkit-scrollbar,
+#history::-webkit-scrollbar {
+    width: 8px;
+}
+
+#chats::-webkit-scrollbar-track,
+#history::-webkit-scrollbar-track {
+    background: var(--bg);
+}
+
+#chats::-webkit-scrollbar-thumb,
+#history::-webkit-scrollbar-thumb {
+    background: var(--p);
+    border-radius: 4px;
+}
+
+#chats::-webkit-scrollbar-thumb:hover,
+#history::-webkit-scrollbar-thumb:hover {
+    background: var(--pd);
+}
+
+/* Responsivo */
+@media (max-width: 900px) {
+    .sidebar {
+        display: none;
+    }
+
+    .main {
+        margin-left: var(--nav-w);
+        /* Mantener espacio para el nav fijo */
+    }
+}
+
+/* Utilidad: ocultar visualmente manteniendo accesibilidad */
+.visually-hidden {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+
+/* Previene que temas oscuros hagan invisibles PNG con poca opacidad (utilitario original) */
+.nav-icons img,
+.chat-area img {
+    opacity: 1;
+}
+
+/* Fin style.css */

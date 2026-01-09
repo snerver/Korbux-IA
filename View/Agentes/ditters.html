@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ditters</title>
+  <link rel="icon" href="assets/img/logo.png" type="image/png" />
+  <script src="https://cdn.jsdelivr.net/npm/lokijs@1.5.12/build/lokijs.min.js"></script>
+  <style>
+    body { font-family: "Segoe UI Variable", system-ui, sans-serif; background:#f9fbff; color:#1a1a1a; margin:0; display:flex; }
+    .navbar { position:fixed; top:0; left:0; width:250px; height:100vh; background:#fff; border-right:1px solid #e6eaf2; padding:20px; }
+    .brand { font-size:1.6rem; font-weight:900; color:#5d7eff; text-decoration:none; display:block; margin-bottom:16px; }
+    .nav-links { display:flex; flex-direction:column; gap:10px; }
+    .nav-links a { padding:10px; border-radius:12px; font-weight:600; text-decoration:none; color:#1a1a1a; }
+    .nav-links a:hover { background:#5d7eff; color:#fff; }
+    main { margin-left:250px; padding:32px; width:100%; }
+    .module { max-width:980px; margin:0 auto 28px auto; background:#fff; border:1px solid #e6eaf2; border-radius:18px; }
+    .module header { padding:22px 24px; border-bottom:1px solid #e6eaf2; }
+    .content { padding:22px 24px; display:grid; gap:16px; }
+    .row { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+    .full { grid-column:1 / -1; }
+    label { font-weight:600; margin-bottom:6px; display:block; }
+    input, select, textarea { width:100%; padding:12px; border-radius:12px; border:1px solid #e6eaf2; }
+    .actions { display:flex; gap:12px; flex-wrap:wrap; }
+    .btn { padding:12px 16px; border-radius:12px; border:none; font-weight:700; cursor:pointer; }
+    .btn-primary { background:#5d7eff; color:#fff; }
+    .btn-secondary { background:#f9fbff; color:#5d7eff; border:1px solid #e6eaf2; }
+    .output { background:#f9fbff; border:1px solid #e6eaf2; border-radius:12px; padding:16px; }
+    .placeholder { min-height:180px; background:#0b1220; color:#e2e8f0; display:flex; align-items:center; justify-content:center; border-radius:12px; }
+    .log { margin-top:8px; font-size:0.9rem; color:#64748b; }
+  </style>
+</head>
+<body>
+    <nav class="navbar" role="navigation" aria-label="Navegación principal">
+    <a class="brand" href="/View/index.html">Korbux</a>
+      <div class="nav-links" aria-label="Módulos disponibles">
+        <a href="okuota.html">Okuota</a>
+        <a href="monet.html">Monet</a>
+        <a href="ditters.html">Ditters</a>
+        <a href="jean.html">Jean</a>
+        <a href="lovelace.html">Lovelace</a>
+        <a href="santaolalla.html">Santa Olalla</a>
+        <a href="/View/perfil.html">Perfil</a>
+        <a href="/View/historial.html">Historial</a>
+      </div>
+      <div class="nav-controls">
+        <button id="toggle-theme" title="Alternar tema claro/oscuro"> TEMA </button>
+      </div>
+    </nav>
+
+  <main>
+    <!-- Generador musical -->
+    <section class="module" id="modulo-musica">
+      <header><h2>Ditters · Generador musical</h2></header>
+      <div class="content">
+        <div class="row">
+          <div>
+            <label for="estilo-musical">Estilo musical</label>
+            <select id="estilo-musical">
+              <option value="clasica">Clásica</option>
+              <option value="barroco">Barroco</option>
+              <option value="romantico">Romántico</option>
+              <option value="jazz">Jazz</option>
+              <option value="rock">Rock</option>
+              <option value="electronica">Electrónica</option>
+              <option value="hiphop">Hip-Hop</option>
+              <option value="reggaeton">Reggaetón</option>
+              <option value="experimental">Experimental</option>
+            </select>
+          </div>
+          <div>
+            <label for="instrumentos">Instrumentos</label>
+            <input id="instrumentos" type="text" placeholder="Ej. piano, violín, sintetizador" />
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label for="tempo">Tempo (BPM)</label>
+            <input id="tempo" type="number" min="40" max="240" placeholder="Ej. 120" />
+          </div>
+          <div>
+            <label for="duracion">Duración (minutos)</label>
+            <input id="duracion" type="number" min="1" max="60" placeholder="Ej. 3" />
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label for="tonalidad">Tonalidad</label>
+            <input id="tonalidad" type="text" placeholder="Ej. Do mayor" />
+          </div>
+          <div>
+            <label for="compases">Compases totales</label>
+            <input id="compases" type="number" min="4" step="4" placeholder="Ej. 64" />
+          </div>
+        </div>
+        <div class="row full">
+          <label for="estructura">Estructura</label>
+          <textarea id="estructura" placeholder="Ej. Intro (8), Desarrollo (32), Clímax (16), Final (8)"></textarea>
+        </div>
+        <div class="row full">
+          <label for="descripcion-musica">Descripción / notas</label>
+          <textarea id="descripcion-musica" placeholder="Ej. Composición con influencia barroca y toques electrónicos..."></textarea>
+        </div>
+        <div class="actions">
+          <button class="btn btn-primary" id="generar-musica">Generar música</button>
+          <button class="btn btn-secondary" id="reset-musica">Limpiar</button>
+        </div>
+        <div class="output full">
+          <strong>Composición generada:</strong>
+          <div id="salida-musica" class="placeholder">[aquí se mostraría la composición]</div>
+          <div id="log-musica" class="log"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const db = new loki("korbux.json", {
+      autoload: true,
+      autosave: true,
+      autosaveInterval: 5000,
+      autoloadCallback: () => {
+        if (!db.getCollection("musica")) db.addCollection("musica", { indices: ["estilo"] });
+        if (!db.getCollection("auditoria")) db.addCollection("auditoria");
+        precargarEjemplos();
+      },
+    });
+
+    function auditar(entry) {
+      const auditoria = db.getCollection("auditoria");
+      auditoria.insert({ ...entry, fecha: new Date().toISOString(), modulo: "Ditters", usuario: "daniel_korbux" });
+    }
+    function setOutput(el, html) { el.innerHTML = html; }
+
+    function precargarEjemplos() {
+      const musica = db.getCollection("musica");
+      if (musica.count() > 0) return;
+      const ejemplos = [
+        { estilo:"clasica", instrumentos:"orquesta", tempo:90, duracion:10, tonalidad:"Do mayor", compases:128, estructura:"Sinfonía en 4 movimientos", descripcion:"Ejemplo clásico barroco", fecha:new Date().toISOString() },
+        { estilo:"electronica", instrumentos:"sintetizador, caja de ritmos", tempo:128, duracion:5, tonalidad:"La menor", compases:64, estructura:"Intro, drop, build, outro", descripcion:"Beat electrónico moderno", fecha:new Date().toISOString() }
+      ];
+      ejemplos.forEach(e => musica.insert(e));
+      auditar({ tipo:"precarga", campo:"musica", nuevo:`Precargados ${ejemplos.length} ejemplos` });
+    }
+
+        document.getElementById("generar-musica").addEventListener("click", () => {
+      const estilo = document.getElementById("estilo-musical").value;
+      const instrumentos = document.getElementById("instrumentos").value.trim();
+      const tempo = document.getElementById("tempo").value.trim();
+      const duracion = document.getElementById("duracion").value.trim();
+      const tonalidad = document.getElementById("tonalidad").value.trim();
+      const compases = document.getElementById("compases").value.trim();
+      const estructura = document.getElementById("estructura").value.trim();
+      const descripcion = document.getElementById("descripcion-musica").value.trim();
+
+      if (!estilo || !instrumentos) {
+        setOutput(document.getElementById("salida-musica"), "Error: estilo e instrumentos son obligatorios.");
+        return;
+      }
+
+      const musica = db.getCollection("musica");
+      const payload = { estilo, instrumentos, tempo, duracion, tonalidad, compases, estructura, descripcion, fecha: new Date().toISOString() };
+      musica.insert(payload);
+      auditar({ tipo: "composicion", campo: "musica", nuevo: JSON.stringify(payload).slice(0, 200) + "…" });
+
+      setOutput(document.getElementById("salida-musica"),
+        `<p><strong>Estilo:</strong> ${estilo}</p>
+         <p><strong>Instrumentos:</strong> ${instrumentos}</p>
+         <p><strong>Tempo:</strong> ${tempo || "—"} BPM</p>
+         <p><strong>Duración:</strong> ${duracion || "—"} min</p>
+         <p><strong>Tonalidad:</strong> ${tonalidad || "—"}</p>
+         <p><strong>Compases:</strong> ${compases || "—"}</p>
+         <p><strong>Estructura:</strong> ${estructura || "(sin estructura)"}</p>
+         <p><strong>Notas:</strong> ${descripcion || "(sin notas)"}</p>
+         <p>🎼 Composición conceptual generada y registrada.</p>`
+      );
+      document.getElementById("log-musica").textContent = "Composición guardada.";
+    });
+
+    document.getElementById("reset-musica").addEventListener("click", () => {
+      ["estilo-musical","instrumentos","tempo","duracion","tonalidad","compases","estructura","descripcion-musica"].forEach(id => {
+        const el = document.getElementById(id);
+        if (el.tagName === "SELECT") el.selectedIndex = 0; else el.value = "";
+      });
+      setOutput(document.getElementById("salida-musica"), "[aquí se mostraría la composición]");
+      document.getElementById("log-musica").textContent = "";
+    });
+  </script>
+</body>
+</html>

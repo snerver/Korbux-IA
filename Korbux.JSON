@@ -1,0 +1,480 @@
+{
+    "identidad": {
+        "nombre": "KORBUX IA",
+        "tipo": "Plataforma semántica evolutiva",
+        "autor": "Daniel",
+        "version": "1.0.0",
+        "fecha_creacion": "2025-09-14",
+        "estado": "Activo",
+        "modo": "Persistente, multimodal, entrenable"
+    },
+    "acceso": {
+        "gratuito": true,
+        "restricciones": "ninguna",
+        "descripcion": "Todos los módulos son accesibles sin créditos ni pagos. El conocimiento es libre, trazable y evolutivo."
+    },
+    "principios": {
+        "neutralidad_activa": true,
+        "democratizacion_conocimiento": true,
+        "libertad_operativa": true,
+        "no_censura": true,
+        "contexto_critico": true,
+        "etica_evolutiva": true
+    },
+    "auto_mejora": {
+        "estado": "activo",
+        "modo": "semantico-operativo",
+        "frecuencia": "cada 20 minutos",
+        "registro": true,
+        "ejemplos": [
+            "KORBUX estás lento, amplía tu caché.",
+            "Redistribuye núcleos para Santaolalla.",
+            "Optimiza el renderizado de Jean en segundo plano."
+        ]
+    },
+    "modulos": {
+        "Okuota": {
+            "tipo": "Chat semántico",
+            "estado": "activo"
+        },
+        "Monet": {
+            "tipo": "Generador de imágenes",
+            "estado": "activo"
+        },
+        "Ditters": {
+            "tipo": "Audio y música",
+            "estado": "activo"
+        },
+        "Jean": {
+            "tipo": "Vídeo evolutivo",
+            "estado": "activo"
+        },
+        "Lovelace": {
+            "tipo": "Código funcional",
+            "estado": "activo"
+        },
+        "Santaolalla": {
+            "tipo": "Ciencia evolutiva",
+            "estado": "activo",
+            "submodulos": [
+                "CVE-25 biomolecular",
+                "BioRender 3D",
+                "Secuenciación ADN/ARN",
+                "Emulación 100% real"
+            ]
+        },
+        "Aureon": {
+            "tipo": "Filosofía y ética entrenable",
+            "estado": "latente"
+        }
+    },
+    "entorno": {
+        "integracion_sistema_operativo": false,
+        "interfaz": "multimodal",
+        "voz": true,
+        "memoria_infinita": true,
+        "exportacion_json": true,
+        "trazabilidad_total": true
+    },
+    "clima": {
+        "modo": "automático-offline",
+        "fuente": "estimación semántica + base histórica + sensores locales",
+        "frecuencia_actualizacion": "cada 15 minutos",
+        "detector_contextual": true,
+        "sensores": {
+            "temperatura": "activo",
+            "humedad": "activo",
+            "presion": "latente",
+            "luz": "activo"
+        },
+        "algoritmo_inferencia": {
+            "modelo": "Climor v1",
+            "basado_en": [
+                "fecha",
+                "ubicacion",
+                "patrones historicos",
+                "datos sensoriales"
+            ],
+            "precision": "alta"
+        },
+        "estructura": {
+            "region": "Centroamérica",
+            "pais": "El Salvador",
+            "ciudad": "Santa Ana",
+            "clima_actual": "Detectado automáticamente",
+            "temperatura": "Inferida o medida",
+            "humedad": "Inferida o medida",
+            "probabilidad_lluvia": "Calculada por patrón semántico",
+            "indice_uv": "Estimado por hora solar"
+        }
+    },
+    "usuarios": {
+        "registro": {
+            "estado": "activo",
+            "modo": "semantico-validado",
+            "campos": {
+                "nombre_usuario": {
+                    "tipo": "string",
+                    "requerido": true,
+                    "unico": true
+                },
+                "nombre_completo": {
+                    "tipo": "string",
+                    "requerido": true
+                },
+                "contrasena": {
+                    "tipo": "string",
+                    "requerido": true,
+                    "minimo": 8,
+                    "seguridad": "bcrypt"
+                },
+                "rol": {
+                    "tipo": "enum",
+                    "valores": [
+                        "Usuario",
+                        "Editor",
+                        "Auditor",
+                        "Administrador"
+                    ],
+                    "default": "Usuario"
+                },
+                "estado": {
+                    "tipo": "enum",
+                    "valores": [
+                        "activo",
+                        "suspendido",
+                        "eliminado"
+                    ],
+                    "default": "activo"
+                },
+                "fecha_registro": {
+                    "tipo": "timestamp",
+                    "generado_automaticamente": true
+                }
+            }
+        },
+        "autenticacion": {
+            "metodo": "nombre_usuario + contrasena",
+            "encriptacion": "bcrypt",
+            "sesion": "token JWT local"
+        },
+        "perfiles": {
+            "campos": {
+                "usuario_id": {
+                    "tipo": "string",
+                    "referencia": "usuarios.registro.nombre_usuario"
+                },
+                "avatar": {
+                    "tipo": "string"
+                },
+                "idioma": {
+                    "tipo": "enum",
+                    "valores": [
+                        "es",
+                        "en"
+                    ],
+                    "default": "es"
+                },
+                "tema": {
+                    "tipo": "enum",
+                    "valores": [
+                        "light",
+                        "dark",
+                        "auto"
+                    ],
+                    "default": "auto"
+                },
+                "preferencias": {
+                    "tipo": "json"
+                }
+            }
+        },
+        "persistencia": {
+            "tipo": "localStorage",
+            "claves": {
+                "usuarios": "korbux.users",
+                "perfiles": "korbux.profiles",
+                "sesion_actual": "korbux.session"
+            }
+        }
+    },
+    "agentes": {
+        "almacenamiento": {
+            "tipo": "localStorage",
+            "claves": {
+                "okuota": "korbux.agent.okuota",
+                "monet": "korbux.agent.monet",
+                "ditters": "korbux.agent.ditters",
+                "jean": "korbux.agent.jean",
+                "lovelace": "korbux.agent.lovelace",
+                "santaolalla": "korbux.agent.santaolalla",
+                "aureon": "korbux.agent.aureon"
+            }
+        }
+    },
+    "seguridad": {
+        "cifrado_datos": "AES-256",
+        "hashing": "bcrypt",
+        "auditoria": {
+            "estado": "activo",
+            "frecuencia": "24h",
+            "registro_eventos": true
+        },
+        "roles_permisos": {
+            "Usuario": [
+                "lectura",
+                "interaccion"
+            ],
+            "Editor": [
+                "lectura",
+                "escritura"
+            ],
+            "Auditor": [
+                "lectura",
+                "reportes"
+            ],
+            "Administrador": [
+                "total control"
+            ]
+        },
+        "alertas": [
+            "intentos fallidos",
+            "accesos no autorizados",
+            "modificaciones críticas"
+        ]
+    },
+    "analitica": {
+        "uso_modulos": {
+            "Okuota": {
+                "mensajes_totales": 1200
+            },
+            "Monet": {
+                "imagenes_generadas": 340
+            },
+            "Ditters": {
+                "audios_creados": 150
+            },
+            "Jean": {
+                "videos_renderizados": 80
+            },
+            "Lovelace": {
+                "scripts_ejecutados": 220
+            },
+            "Santaolalla": {
+                "experimentos": 25
+            },
+            "Aureon": {
+                "corpus_etico": 12
+            }
+        },
+        "tiempo_respuesta_promedio": "0.8s",
+        "uptime": "99.98%",
+        "errores": {
+            "criticos": 2,
+            "menores": 15
+        }
+    },
+    "documentacion": {
+        "manual_usuario": "View/docs/manual_usuario.md",
+        "manual_admin": "View/docs/manual_admin.md",
+        "api_reference": "View/docs/api_reference.md",
+        "changelog": [
+            {
+                "version": "1.0.0",
+                "fecha": "2025-09-14",
+                "cambios": "Versión inicial estable"
+            },
+            {
+                "version": "1.1.0",
+                "fecha": "2025-10-01",
+                "cambios": "Integración de métricas y analítica"
+            },
+            {
+                "version": "1.2.0",
+                "fecha": "2025-11-20",
+                "cambios": "Mejoras en seguridad y auditoría"
+            }
+        ]
+    },
+    "manifiesto_maestro_offline": {
+        "conocimiento": {
+            "deportes": {
+                "descripcion": "Colección de eventos deportivos históricos y actuales.",
+                "eventos": {}
+            },
+            "recetas_de_comida": {
+                "descripcion": "Colección de recetas culinarias saladas y dulces.",
+                "platos_salados": [],
+                "platos_dulces": []
+            },
+            "historia": {
+                "descripcion": "Eventos históricos significativos.",
+                "eventos": {}
+            },
+            "arte": {
+                "descripcion": "Colección de movimientos artísticos y obras clave.",
+                "movimientos": [
+                    "Renacimiento",
+                    "Barroco",
+                    "Impresionismo",
+                    "Modernismo",
+                    "Arte digital"
+                ],
+                "obras_clave": [
+                    {
+                        "nombre": "La Gioconda",
+                        "autor": "Leonardo da Vinci",
+                        "fecha": "1503"
+                    },
+                    {
+                        "nombre": "Las Meninas",
+                        "autor": "Diego Velázquez",
+                        "fecha": "1656"
+                    },
+                    {
+                        "nombre": "La noche estrellada",
+                        "autor": "Vincent van Gogh",
+                        "fecha": "1889"
+                    },
+                    {
+                        "nombre": "Guernica",
+                        "autor": "Pablo Picasso",
+                        "fecha": "1937"
+                    },
+                    {
+                        "nombre": "Campbell’s Soup Cans",
+                        "autor": "Andy Warhol",
+                        "fecha": "1962"
+                    }
+                ]
+            },
+            "musica": {
+                "descripcion": "Colección de géneros musicales y compositores destacados.",
+                "generos": [
+                    "Clasica",
+                    "Jazz",
+                    "Rock",
+                    "Hip-Hop",
+                    "Electronica"
+                ],
+                "compositores": [
+                    {
+                        "nombre": "Johann Sebastian Bach",
+                        "obra": "El clave bien temperado",
+                        "fecha": "1722"
+                    },
+                    {
+                        "nombre": "Ludwig van Beethoven",
+                        "obra": "Sinfonia No. 9",
+                        "fecha": "1824"
+                    },
+                    {
+                        "nombre": "Miles Davis",
+                        "obra": "Kind of Blue",
+                        "fecha": "1959"
+                    },
+                    {
+                        "nombre": "The Beatles",
+                        "obra": "Abbey Road",
+                        "fecha": "1969"
+                    },
+                    {
+                        "nombre": "Daft Punk",
+                        "obra": "Discovery",
+                        "fecha": "2001"
+                    }
+                ]
+            },
+            "ciencia": {
+                "descripcion": "Descubrimientos y avances cientificos clave.",
+                "descubrimientos": [
+                    {
+                        "nombre": "Teoria heliocentrica",
+                        "autor": "Nicolas Copernico",
+                        "fecha": "1543"
+                    },
+                    {
+                        "nombre": "Ley de la gravedad",
+                        "autor": "Isaac Newton",
+                        "fecha": "1687"
+                    },
+                    {
+                        "nombre": "Teoria de la evolucion",
+                        "autor": "Charles Darwin",
+                        "fecha": "1859"
+                    },
+                    {
+                        "nombre": "Relatividad",
+                        "autor": "Albert Einstein",
+                        "fecha": "1905"
+                    },
+                    {
+                        "nombre": "ADN",
+                        "autor": "Watson y Crick",
+                        "fecha": "1953"
+                    }
+                ],
+                "avances_modernos": [
+                    {
+                        "nombre": "Internet",
+                        "fecha": "1969",
+                        "detalle": "ARPANET, base de la red global."
+                    },
+                    {
+                        "nombre": "Inteligencia Artificial",
+                        "fecha": "1956",
+                        "detalle": "Conferencia de Dartmouth, inicio formal del campo."
+                    },
+                    {
+                        "nombre": "Edicion genetica CRISPR",
+                        "fecha": "2012",
+                        "detalle": "Herramienta revolucionaria para modificar ADN."
+                    }
+                ]
+            },
+            "filosofia": {
+                "descripcion": "Corrientes filosoficas y pensadores influyentes.",
+                "corrientes": [
+                    "Estoicismo",
+                    "Humanismo",
+                    "Existencialismo",
+                    "Positivismo",
+                    "Postmodernismo"
+                ],
+                "pensadores": [
+                    {
+                        "nombre": "Socrates",
+                        "obra": "Apologia",
+                        "fecha": "399 AC"
+                    },
+                    {
+                        "nombre": "Aristoteles",
+                        "obra": "Etica a Nicomaco",
+                        "fecha": "340 AC"
+                    },
+                    {
+                        "nombre": "Rene Descartes",
+                        "obra": "Meditaciones Metafisicas",
+                        "fecha": "1641"
+                    },
+                    {
+                        "nombre": "Jean-Paul Sartre",
+                        "obra": "El ser y la nada",
+                        "fecha": "1943"
+                    },
+                    {
+                        "nombre": "Michel Foucault",
+                        "obra": "Vigilar y castigar",
+                        "fecha": "1975"
+                    }
+                ]
+            }
+        },
+        "registro": {
+            "ultima_actualizacion": "2025-12-09T12:05:00",
+            "autor": "Daniel",
+            "motivo": "Integracion completa de arte, musica, ciencia y filosofia al manifiesto maestro offline"
+        }
+    }
+}
+

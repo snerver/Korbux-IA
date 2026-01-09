@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Historial</title>
+  <link rel="icon" href="assets/img/logo.png" type="image/png" />
+  <script src="https://cdn.jsdelivr.net/npm/lokijs@1.5.12/build/lokijs.min.js"></script>
+  <style>
+    body { font-family:"Segoe UI Variable",system-ui,sans-serif; background:#f9fbff; color:#1a1a1a; margin:0; display:flex; }
+    .navbar { position:fixed; top:0; left:0; width:250px; height:100vh; background:#fff; border-right:1px solid #e6eaf2; padding:20px; }
+    .brand { font-size:1.6rem; font-weight:900; color:#5d7eff; text-decoration:none; display:block; margin-bottom:16px; }
+    .nav-links { display:flex; flex-direction:column; gap:10px; }
+    .nav-links a { padding:10px; border-radius:12px; font-weight:600; text-decoration:none; color:#1a1a1a; }
+    .nav-links a:hover { background:#5d7eff; color:#fff; }
+    main { margin-left:250px; padding:32px; width:100%; }
+    .module { max-width:980px; margin:0 auto 28px auto; background:#fff; border:1px solid #e6eaf2; border-radius:18px; }
+    .module header { padding:22px 24px; border-bottom:1px solid #e6eaf2; }
+    .content { padding:22px 24px; }
+    table { width:100%; border-collapse:collapse; margin-top:16px; }
+    th, td { padding:12px; border:1px solid #e6eaf2; text-align:left; }
+    th { background:#5d7eff; color:#fff; }
+    tr:nth-child(even) { background:#f2f4f8; }
+    .log { margin-top:12px; font-size:0.9rem; color:#64748b; }
+    .back-btn { margin-top:20px; display:inline-block; padding:12px 20px; border-radius:12px; background:#5d7eff; color:#fff; text-decoration:none; font-weight:600; }
+    .back-btn:hover { background:#4a6be6; }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <a class="logo" href="index.html">Korbux</a>
+    <div class="nav-links">
+      <a href="okuota.html">Okuota</a>
+      <a href="monet.html">Monet</a>
+      <a href="ditters.html">Ditters</a>
+      <a href="jean.html">Jean</a>
+      <a href="lovelace.html">Lovelace</a>
+      <a href="santaolalla.html">Santa Olalla</a>
+      <a href="perfil.html">Perfil</a>
+      <a href="historial.html">Historial</a>
+    </div>
+  </nav>
+
+  <main>
+    <section class="module" id="modulo-historial">
+      <header><h2>Historial · Registros de auditoría</h2></header>
+      <div class="content">
+        <p>Este módulo muestra todas las acciones registradas en el sistema (aprendizajes, simulaciones, composiciones, etc.).</p>
+        <table id="tabla-historial">
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Módulo</th>
+              <th>Tipo</th>
+              <th>Campo</th>
+              <th>Nuevo valor</th>
+              <th>Usuario</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Filas dinámicas -->
+          </tbody>
+        </table>
+        <div class="log" id="log-historial">[esperando registros...]</div>
+      </div>
+    </section>
+    <a href="index.html" class="back-btn">⬅ Volver al inicio</a>
+  </main>
+
+  <script>
+    const db = new loki("korbux.json", {
+      autoload:true,
+      autosave:true,
+      autosaveInterval:5000,
+      autoloadCallback: cargarHistorial
+    });
+
+    function cargarHistorial() {
+      const auditoria = db.getCollection("auditoria");
+      const tbody = document.querySelector("#tabla-historial tbody");
+      const log = document.getElementById("log-historial");
+
+      if (!auditoria || auditoria.count() === 0) {
+        log.textContent = "No hay registros disponibles.";
+        return;
+      }
+
+      tbody.innerHTML = "";
+      auditoria.chain().simplesort("fecha", true).data().forEach(reg => {
+        const fila = document.createElement("tr");
+        fila.innerHTML = `
+          <td>${reg.fecha ? new Date(reg.fecha).toLocaleString() : "—"}</td>
+          <td>${reg.modulo || "—"}</td>
+          <td>${reg.tipo || "—"}</td>
+          <td>${reg.campo || "—"}</td>
+          <td>${reg.nuevo || "—"}</td>
+          <td>${reg.usuario || "—"}</td>
+        `;
+        tbody.appendChild(fila);
+      });
+      log.textContent = `Total de registros: ${auditoria.count()}`;
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>Korbux IA</title>
+
+    <!-- Favicon: ruta correcta desde /View -->
+    <link rel="icon" href="assets/img/logo.png" type="image/png" />
+
+    <!-- CSS: ruta correcta desde /View -->
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- Barra lateral fija -->
+    <nav class="nav" aria-label="Navegación principal" role="navigation">
+    <a class="logo" href="index.html">Korbux</a>
+
+      <!-- Accesos a agentes -->
+      <div class="nav-icons" aria-label="Agentes disponibles">
+        <a href="Agentes/okuota.html" title="Okuota" aria-label="Okuota">Okuota</a>
+        <a href="Agentes/Monet.html" title="Monet" aria-label="Monet">Monet</a>
+        <a href="Agentes/Ditters.html" title="Ditters" aria-label="Ditters">Ditters</a>
+        <a href="Agentes/Jean.html" title="Jean" aria-label="Jean">Jean</a>
+        <a href="Agentes/Lovelace.html" title="Lovelace" aria-label="Lovelace">Lovelace</a>
+        <a href="Agentes/Santa_olalla.html" title="Santa Olalla" aria-label="Santa Olalla">Santa Olalla</a>
+        <a href="Perfil.html" title="Perfil" aria-label="Perfil">Perfil</a>
+        <a
+          href="Historial.html"
+          title="Historial"
+          class="active"
+          aria-current="page"
+          aria-label="Historial"
+        >
+          Historial
+        </a>
+      </div>
+
+      <!-- Botón de tema -->
+<div class="nav-bottom">
+  <button
+    id="theme"
+    type="button"
+    aria-pressed="false"
+    aria-label="Cambiar tema"
+  >
+    <span>Tema</span>
+  </button>
+</div>
+
+    </nav>
+
+    <!-- Área principal -->
+    <div class="main" role="main">
+      <aside class="sidebar" aria-label="Chats recientes">
+        <button id="new-chat" type="button" aria-label="Crear nuevo chat">
+          Nuevo Chat
+        </button>
+
+        <h2 class="recent-title" id="recent-chats-title">Chats recientes</h2>
+
+        <ul id="chats" aria-live="polite" aria-labelledby="recent-chats-title"></ul>
+      </aside>
+
+      <section class="chat-area" aria-label="Área de conversación">
+        <div
+          id="history"
+          aria-live="polite"
+          aria-relevant="additions"
+          aria-atomic="false"
+        ></div>
+
+        <form
+          id="form"
+          autocomplete="off"
+          aria-label="Enviar mensaje"
+          novalidate
+        >
+          <textarea
+            id="input"
+            name="mensaje"
+            placeholder="Escribe tu mensaje aquí..."
+            rows="3"
+            aria-label="Campo de texto del mensaje"
+          ></textarea>
+
+          <div class="input-buttons">
+            <label
+              class="input-btn"
+              title="Subir archivo"
+              aria-label="Adjuntar archivo"
+            >
+              <input
+                type="file"
+                id="file-input"
+                aria-hidden="true"
+                tabindex="-1"
+              />
+              <img
+                src="../assets/adjunto.png"
+                alt="Adjuntar archivo"
+                role="img"
+                loading="lazy"
+              />
+            </label>
+
+            <button
+              type="button"
+              class="input-btn"
+              id="voice-btn"
+              title="Audio"
+              aria-label="Grabar audio"
+            >
+              <img
+                src="../assets/microfono.png"
+                alt="Grabar audio"
+                role="img"
+                loading="lazy"
+              />
+            </button>
+
+            <button
+              type="submit"
+              class="input-btn"
+              id="send-btn"
+              title="Enviar"
+              aria-label="Enviar mensaje"
+            >
+              <img
+                src="../assets/enviar.png"
+                alt="Enviar mensaje"
+                role="img"
+                loading="lazy"
+              />
+            </button>
+          </div>
+        </form>
+      </section>
+    </div>
+
+    <!-- JS: ruta correcta desde /View -->
+    <script src="script.js"></script>
+  </body>
+</html>
